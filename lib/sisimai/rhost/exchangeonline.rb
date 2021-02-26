@@ -1,12 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "rhost" of the object
-    # is "*.protection.outlook.com". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "rhost" of the object is *.protection.outlook.com. This class
+    # is called only Sisimai::Data class.
     module ExchangeOnline
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/ExchangeOnline.pm
-
         # https://technet.microsoft.com/en-us/library/bb232118
         StatusList = {
           '4.3.1'   => [{ reason: 'systemfull', string: 'Insufficient system resources' }],
@@ -121,10 +119,10 @@ module Sisimai
         # @param    [Sisimai::Data] argvs   Parsed email object
         # @return   [String]                The bounce reason for Exchange Online
         def get(argvs)
-          return argvs.reason unless argvs.reason.empty?
+          return argvs['reason'] unless argvs['reason'].empty?
 
-          statuscode = argvs.deliverystatus
-          statusmesg = argvs.diagnosticcode
+          statuscode = argvs['deliverystatus']
+          statusmesg = argvs['diagnosticcode']
           reasontext = ''
 
           StatusList.each_key do |e|
@@ -156,8 +154,7 @@ module Sisimai
           end
           return reasontext unless reasontext.empty?
 
-          # D.S.N. included in the error message did not matched with any
-          # key in ReStatuses
+          # D.S.N. included in the error message did not matched with any key in ReStatuses
           MessagesOf.each_key do |e|
             # Try to compare with error messages defined in MessagesOf
             MessagesOf[e].each do |f|

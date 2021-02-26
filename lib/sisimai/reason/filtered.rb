@@ -1,16 +1,13 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::Filtered checks the bounce reason is "filtered" or not.
-    # This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::Filtered checks the bounce reason is "filtered" or not. This class is called
+    # only Sisimai::Reason class.
     #
-    # This is the error that an email has been rejected by a header content after
-    # SMTP DATA command.
-    # In Japanese cellular phones, the error will incur that a sender's email address
-    # or a domain is rejected by recipient's email configuration. Sisimai will
-    # set "filtered" to the reason of email bounce if the value of Status: field
-    # in a bounce email is "5.2.0" or "5.2.1".
+    # This is the error that an email has been rejected by a header content after SMTP DATA command.
+    # In Japanese cellular phones, the error will incur that a sender's email address or a domain
+    # is rejected by recipient's email configuration. Sisimai will set "filtered" to the reason of
+    # email bounce if the value of Status: field in a bounce email is "5.2.0" or "5.2.1".
     module Filtered
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/Filtered.pm
       class << self
         Index = [
           'because the recipient is only accepting mail from specific email addresses',   # AOL Phoenix
@@ -47,14 +44,14 @@ module Sisimai
         #                                   false: is not filtered
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'filtered'
+          return true if argvs['reason'] == 'filtered'
 
           require 'sisimai/reason/userunknown'
-          tempreason = Sisimai::SMTP::Status.name(argvs.deliverystatus) || ''
+          tempreason = Sisimai::SMTP::Status.name(argvs['deliverystatus']) || ''
           return false if tempreason == 'suspend'
 
-          commandtxt = argvs.smtpcommand || ''
-          diagnostic = argvs.diagnosticcode.downcase || ''
+          commandtxt = argvs['smtpcommand'] || ''
+          diagnostic = argvs['diagnosticcode'].downcase || ''
           alterclass = Sisimai::Reason::UserUnknown
 
           if tempreason == 'filtered'

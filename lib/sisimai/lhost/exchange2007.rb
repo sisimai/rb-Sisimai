@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Exchange2007 parses a bounce email which created by
-  # Microsoft Exchange Server 2007.
+  # Sisimai::Lhost::Exchange2007 parses a bounce email which created by Microsoft Exchange Server 2007.
   # Methods in the module are called from only Sisimai::Message.
   module Exchange2007
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Exchange2007.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -50,7 +48,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # Content-Language: en-US, fr-FR
         return nil unless mhead['subject'] =~ MarkingsOf[:subject]
         return nil unless mhead['content-language']
@@ -72,8 +70,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e =~ MarkingsOf[:message]
@@ -103,7 +101,7 @@ module Sisimai::Lhost
               v['diagnosis'] = ''
               recipients += 1
 
-            elsif cv = e.match(/([45]\d{2})[ ]([45][.]\d[.]\d+)[ ].+\z/)
+            elsif cv = e.match(/([45]\d{2})[ ]([45][.]\d[.]\d+)?[ ]?.+\z/)
               # #550 5.1.1 RESOLVER.ADR.RecipNotFound; not found ##
               # #550 5.2.3 RESOLVER.RST.RecipSizeLimit; message too large for this recipient ##
               # Remote Server returned '550 5.1.1 RESOLVER.ADR.RecipNotFound; not found'

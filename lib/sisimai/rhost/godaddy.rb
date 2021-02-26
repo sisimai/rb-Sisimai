@@ -1,11 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "rhost" of the object
-    # is "*.secureserver.net". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "rhost" of the object is "*.secureserver.net". This class is
+    # called only Sisimai::Data class.
     module GoDaddy
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/GoDaddy.pm
         # https://www.godaddy.com/help/what-does-my-email-bounceback-mean-3568
         ErrorCodes = {
           'IB103' => 'blocked',       # 554 Connection refused. This IP has a poor reputation on Cloudmark Sender Intelligence (CSI). IB103
@@ -43,9 +42,9 @@ module Sisimai
         # @return   [String]                The bounce reason for GoDaddy
         # @see      https://www.godaddy.com/help/what-does-my-email-bounceback-mean-3568
         def get(argvs)
-          return argvs.reason unless argvs.reason.empty?
+          return argvs['reason'] unless argvs['reason'].empty?
 
-          statusmesg = argvs.diagnosticcode
+          statusmesg = argvs['diagnosticcode']
           reasontext = ''
 
           if cv = statusmesg.match(/\s(IB\d{3})\b/)

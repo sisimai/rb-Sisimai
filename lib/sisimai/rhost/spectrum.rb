@@ -1,21 +1,19 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "destination" of
-    # the object is "charter.net". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "destination" of the object is "charter.net".  This class is
+    # called only Sisimai::Data class.
     module Spectrum
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/Spectrum.pm
         ErrorCodes = {
           # https://www.spectrumbusiness.net/support/internet/understanding-email-error-codes
           #   Error codes are placed in one of two categories: incoming or outgoing.
-          #   1. If you’re trying to send an email to a Charter email address from
-          #      a non-Charter email address (such as Gmail, Yahoo, Hotmail, etc.),
-          #      you may receive an error that begins with AUP#I, followed by four numbers.
+          #   1. If you are trying to send an email to a Charter email address from a non-Charter email
+          #      address (such as Gmail, Yahoo, Hotmail, etc.), you may receive an error that begins
+          #      with AUP#I, followed by four numbers.
           #
-          #   2. If you are trying to send an email from a Charter email address
-          #      to an outgoing recipient, you may get an error code beginning with
-          #      AUP#O, also followed by four numbers.
+          #   2. If you are trying to send an email from a Charter email address to an outgoing recipient,
+          #      you may get an error code beginning with AUP#O, also followed by four numbers.
           #
           1000 => 'blocked',         # Your IP address has been blocked due to suspicious activity. 
           1010 => 'rejected',        # This email account has been blocked from sending emails due to suspicious activity.
@@ -43,7 +41,7 @@ module Sisimai
         # @return   [String, Nil]           The bounce reason at Spectrum
         # @since v4.25.8
         def get(argvs)
-          statusmesg = argvs.diagnosticcode
+          statusmesg = argvs['diagnosticcode']
           codenumber = 0
 
           if cv = statusmesg.match(/AUP#[-A-Za-z]*(\d{4})/)

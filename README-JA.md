@@ -4,7 +4,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/sisimai/rb-sisimai.svg)](https://coveralls.io/r/sisimai/rb-sisimai)
 [![Build Status](https://travis-ci.org/sisimai/rb-sisimai.svg?branch=master)](https://travis-ci.org/sisimai/rb-sisimai) 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/38340177e6284a65be69c0c7c3dc2b58)](https://www.codacy.com/app/azumakuniyuki/rb-sisimai)
-[![Ruby](https://img.shields.io/badge/ruby-v2.1.0--v2.6.0-red.svg)](https://www.ruby-lang.org/)
+[![Ruby](https://img.shields.io/badge/ruby-v2.4.0--v2.7.0-red.svg)](https://www.ruby-lang.org/)
 [![Gem Version](https://badge.fury.io/rb/sisimai.svg)](https://badge.fury.io/rb/sisimai)
 
 - [**README(English)**](README.md)
@@ -36,16 +36,15 @@
 - [ライセンス | License](#license)
 
 What is Sisimai
-===============================================================================
-Sisimai(シシマイ)はRFC5322準拠のエラーメールを解析し、解析結果をデータ構造に
-変換するインターフェイスを提供するRubyライブラリです。
-[github.com/sisimai/p5-sisimai](https://github.com/sisimai/p5-sisimai/)
+===================================================================================================
+Sisimai(シシマイ)はRFC5322準拠のエラーメールを解析し、解析結果をデータ構造に変換するインターフェイス
+を提供するRubyライブラリです。[github.com/sisimai/p5-sisimai](https://github.com/sisimai/p5-sisimai/)
 で公開しているPerl版シシマイから移植しました。
 
 ![](https://libsisimai.org/static/images/figure/sisimai-overview-1.png)
 
 Key features
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 * __エラーメールをデータ構造に変換__
   * Rubyのデータ形式(HashとArray)とJSON(String)に対応
 * __インストールも使用も簡単__
@@ -58,21 +57,20 @@ Key features
   * 29種類のエラー理由を検出
 
 Setting Up Sisimai
-===============================================================================
-
+===================================================================================================
 System requirements
--------------------------------------------------------------------------------
-Sisimaiの動作環境についての詳細は
-[Sisimai | シシマイを使ってみる](https://libsisimai.org/ja/start/)をご覧ください。
+---------------------------------------------------------------------------------------------------
+Sisimaiの動作環境についての詳細は[Sisimai | シシマイを使ってみる](https://libsisimai.org/ja/start/)
+をご覧ください。
 
 
-* [Ruby 2.1.0 or later](http://www.ruby-lang.org/)
+* [Ruby 2.4.0 or later](http://www.ruby-lang.org/)
   * [__Oj | The fastest JSON parser and object serializer__](https://rubygems.org/gems/oj)
 * Also works on [JRuby 9.0.4.0 or later](http://jruby.org)
   * [__JrJackson | A mostly native JRuby wrapper for the java jackson json processor jar__](https://rubygems.org/gems/jrjackson)
 
 Install
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 ### From RubyGems.org
 
 ```shell
@@ -92,7 +90,7 @@ $ cd /usr/local/src
 $ git clone https://github.com/sisimai/rb-sisimai.git
 $ cd ./rb-sisimai
 $ sudo make depend install-from-local
-gem install bundle rake rspec coveralls
+gem install bundle rake minitest coveralls
 ...
 4 gems installed
 bundle exec rake install
@@ -102,26 +100,24 @@ sisimai (4.25.5) installed.
 
 Usage
 ======
-
 Basic usage
--------------------------------------------------------------------------------
-下記のようにSisimaiの`make()`メソッドをmboxかMaildirのPATHを引数にして実行すると
-解析結果が配列で返ってきます。v4.25.6から元データとなった電子メールファイルへの
-PATHを保持する`origin`が利用できます。
+---------------------------------------------------------------------------------------------------
+下記のようにSisimaiの`rise()`メソッドをmboxかMaildirのPATHを引数にして実行すると解析結果が配列で
+返ってきます。v4.25.6から元データとなった電子メールファイルへのPATHを保持する`origin`が利用できます。
 
 ```ruby
 #! /usr/bin/env ruby
 require 'sisimai'
-v = Sisimai.make('/path/to/mbox')       # or path to Maildir/
+v = Sisimai.rise('/path/to/mbox')       # or path to Maildir/
 
-# Beginning with v4.23.0, both make() and dump() method of Sisimai class can
-# read bounce messages from variable instead of a path to mailbox
+# Beginning with v4.23.0, both rise() and dump() method of Sisimai class can read bounce messages
+# from variable instead of a path to mailbox
 f = File.open('/path/to/mbox', 'r');    # or path to Maildir/
-v = Sisimai.make(f.read)
+v = Sisimai.rise(f.read)
 
-# If you want to get bounce records which reason is "delivered", set "delivered"
-# option to make() method like the following:
-v = Sisimai.make('/path/to/mbox', delivered: true)
+# If you want to get bounce records which reason is "delivered", set "delivered" option to rise()
+# method like the following:
+v = Sisimai.rise('/path/to/mbox', delivered: true)
 
 if v.is_a? Array
   v.each do |e|
@@ -136,6 +132,7 @@ if v.is_a? Array
     puts e.replycode            # 550
     puts e.reason               # userunknown
     puts e.origin               # /var/spool/bounce/Maildir/new/1740074341.eml
+    puts e.hardbounce           # true
 
     h = e.damn                  # Convert to HASH
     j = e.dump('json')          # Convert to JSON string
@@ -145,9 +142,9 @@ end
 ```
 
 Convert to JSON
--------------------------------------------------------------------------------
-下記のようにSisimaiの`dump()`メソッドをmboxかMaildirのPATHを引数にして実行すると
-解析結果が文字列(JSON)で返ってきます。
+---------------------------------------------------------------------------------------------------
+下記のようにSisimaiの`dump()`メソッドをmboxかMaildirのPATHを引数にして実行すると解析結果が文字列(JSON)
+で返ってきます。
 
 ```ruby
 # Get JSON string from parsed mailbox or Maildir/
@@ -158,70 +155,119 @@ puts Sisimai.dump('/path/to/mbox', delivered: true)
 ```
 
 Callback feature
--------------------------------------------------------------------------------
-Sisimai 4.19.0から`Sisimai.make()`と`Sisimai.dump()`にLamda(Procオブジェクト)
-を引数`hook`に指定できるコールバック機能が実装されました。
-`hook`に指定したコードによって処理された結果は`Sisimai::Data.catch`
-メソッドで得ることができます。
+---------------------------------------------------------------------------------------------------
+`Sisimai.rise`と`Sisimai.dump`の`:c___`引数はコールバック機能で呼び出されるProcオブジェクトを保持する
+配列です。`:c___`の1番目の要素には`Sisimai::Message.parse`で呼び出されるProcオブジェクトでメールヘッダ
+と本文に対して行う処理を、2番目の要素には、解析対象のメールファイルに対して行う処理をそれぞれ入れます。
+
+各Procオブジェクトで処理した結果は`Sisimai::Data.catch`を通して得られます。
+
+### [0] メールヘッダと本文に対して
+`:c___`に渡す配列の最初の要素に入れたProcオブジェクトは`Sisimai::Message->parse()`で呼び出されます。
 
 ```ruby
 #! /usr/bin/env ruby
 require 'sisimai'
-callbackto = lambda do |v|
-  r = { 'x-mailer' => '', 'queue-id' => '' }
+code = lambda do |args|
+  head = args['headers']    # (*Hash)  Email headers
+  body = args['message']    # (String) Message body
+  adds = { 'x-mailer' => '', 'queue-id' => '' }
 
-  if cv = v['message'].match(/^X-Postfix-Queue-ID:\s*(.+)$/)
-    r['queue-id'] = cv[1]
+  if cv = body.match(/^X-Postfix-Queue-ID:\s*(.+)$/)
+    adds['queue-id'] = cv[1]
   end
-  r['x-mailer'] = v['headers']['x-mailer'] || ''
-  return r
+  r['x-mailer'] = head['x-mailer'] || ''
+  return adds
 end
 
-data = Sisimai.make('/path/to/mbox', hook: callbackto)
-json = Sisimai.dump('/path/to/mbox', hook: callbackto)
+data = Sisimai.rise('/path/to/mbox', c___: [code, nil])
+json = Sisimai.dump('/path/to/mbox', c___: [code, nil])
 
-puts data[0].catch['x-mailer']      # Apple Mail (2.1283)
+puts data[0].catch['x-mailer']  # "Apple Mail (2.1283)"
+puts data[0].catch['queue-id']  # "43f4KX6WR7z1xcMG"
+```
+
+### 各メールのファイルに対して
+`Sisimai->rise()`と`Sisimai->dump()`の両メソッドに渡せる引数`c___`(配列リファレンス)の2番目に入れた
+コードリファレンスは解析したメールのファイルごとに呼び出されます。
+
+```ruby
+path = '/path/to/maildir'
+code = lambda do |args|
+  kind = args['kind']   # (String) Sisimai::Mail.kind
+  mail = args['mail']   # (String) Entire email message
+  path = args['path']   # (String) Sisimai::Mail.path
+  sisi = args['sisi']   # (Array)  List of Sisimai::Data
+
+  sisi.each do |e|
+    # Insert custom fields into the parsed results
+    e.catch ||= {}
+    e.catch['size'] = mail.size
+    e.catch['kind'] = kind.capitalize
+
+    if cv = mail.match(/^Return-Path: (.+)$/)
+      # Return-Path: <MAILER-DAEMON>
+      e.catch['return-path'] = cv[1]
+    end
+    e.catch['parsedat'] = Time.new.localtime.to_s
+
+    # Append X-Sisimai-Parsed: header and save into other path
+    a = sprintf("X-Sisimai-Parsed: %d", sisi.size)
+    p = sprintf("/path/to/another/directory/sisimai-%s.eml", e.token)
+    v = mail.sub(/^(From:.+?)$/, '\1' + "\n" + a)
+    f = File.open(p, 'w:UTF-8')
+    f.write(v)
+    f.close
+
+    # Remove the email file in Maildir/ after parsed
+    File.delete(path) if kind == 'maildir'
+
+    # Need to not return a value
+  end
+end
+
+list = Sisimai.rise(path, c___: [nil, code])
+
+puts list[0].catch['size']          # 2202
+puts list[0].catch['kind']          # "Maildir"
+puts list[0].catch['return-path']   # "<MAILER-DAEMON>"
 ```
 
 コールバック機能のより詳細な使い方は
-[Sisimai | 解析方法 - コールバック機能](https://libsisimai.org/ja/usage/#callback)
-をご覧ください。
-
+[Sisimai | 解析方法 - コールバック機能](https://libsisimai.org/ja/usage/#callback)をご覧ください。
 
 One-Liner
--------------------------------------------------------------------------------
-
+---------------------------------------------------------------------------------------------------
 ```shell
 $ ruby -rsisimai -e 'puts Sisimai.dump($*.shift)' /path/to/mbox
 ```
 
 Output example
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 ![](https://libsisimai.org/static/images/demo/sisimai-dump-02.gif)
 
 ```json
-[{"catch":{"x-mailer":"","return-path":"neko@example.com"},"token":"7e81d3b9306fc7a7f3fb4c7b705189d6806d3d6b","lhost":"omls-1.kuins.neko.example.jp","rhost":"nekonyaan0022.apcprd01.prod.exchangelabs.com","alias":"","listid":"","reason":"userunknown","action":"failed","origin":"set-of-emails/maildir/bsd/lhost-office365-13.eml","subject":"にゃーん","messageid":"","replycode":"550","smtpagent":"Office365","softbounce":0,"smtpcommand":"","destination":"neko.kyoto.example.jp","senderdomain":"example.com","feedbacktype":"","diagnosticcode":"Error Details Reported error: 550 5.1.10 RESOLVER.ADR.RecipientNotFound; Recipient not found by SMTP address lookup DSN generated by: NEKONYAAN0022.apcprd01.prod.exchangelabs.com","diagnostictype":"","deliverystatus":"5.1.10","timezoneoffset":"+0000","addresser":"neko@example.com","recipient":"kijitora-nyaan@neko.kyoto.example.jp","timestamp":1493508885}]
+[{"catch":{"x-mailer":"","return-path":"neko@example.com"},"token":"7e81d3b9306fc7a7f3fb4c7b705189d6806d3d6b","lhost":"omls-1.kuins.neko.example.jp","rhost":"nekonyaan0022.apcprd01.prod.exchangelabs.com","alias":"","listid":"","reason":"userunknown","action":"failed","origin":"set-of-emails/maildir/bsd/lhost-office365-13.eml","subject":"にゃーん","messageid":"","replycode":"550","smtpagent":"Office365","hardbounce":true,"smtpcommand":"","destination":"neko.kyoto.example.jp","senderdomain":"example.com","feedbacktype":"","diagnosticcode":"Error Details Reported error: 550 5.1.10 RESOLVER.ADR.RecipientNotFound; Recipient not found by SMTP address lookup DSN generated by: NEKONYAAN0022.apcprd01.prod.exchangelabs.com","diagnostictype":"","deliverystatus":"5.1.10","timezoneoffset":"+0000","addresser":"neko@example.com","recipient":"kijitora-nyaan@neko.kyoto.example.jp","timestamp":1493508885}]
 ```
 
 Sisimai Specification
-===============================================================================
-
+===================================================================================================
 Differences between Ruby version and Perl version
--------------------------------------------------------------------------------
-公開中のPerl版Sisimai(p5-sisimai)とRuby版Sisimai(rb-sisimai)は下記のような違いが
-あります。bounceHammer 2.7.13p3とSisimai(シシマイ)の違いについては
-[Sisimai | 違いの一覧](https://libsisimai.org/ja/diff/)をご覧ください。
+---------------------------------------------------------------------------------------------------
+公開中のPerl版Sisimai(p5-sisimai)とRuby版Sisimai(rb-sisimai)は下記のような違いがあります。bounceHammer
+2.7.13p3とSisimai(シシマイ)の違いについては[Sisimai | 違いの一覧](https://libsisimai.org/ja/diff/)を
+ご覧ください。
 
 | 機能                                        | Ruby version   | Perl version  |
 |---------------------------------------------|----------------|---------------|
-| 動作環境                                    | Ruby 2.1 - 2.6 | Perl 5.10 -   |
+| 動作環境                                    | Ruby 2.4 - 2.7 | Perl 5.10 -   |
 |                                             | JRuby 9.0.4.0- |               |
 | 解析精度の割合(2000通のメール)[1]           | 1.00           | 1.00          |
 | メール解析速度(1000通のメール)              | 2.22秒[2]      | 1.35秒        |
 | インストール方法                            | gem install    | cpanm, cpm    |
 | 依存モジュール数(コアモジュールを除く)      | 1モジュール    | 2モジュール   |
 | LOC:ソースコードの行数                      | 10300行        | 10500行       |
-| テスト件数(spec/,t/,xt/ディレクトリ)        | 236000件       | 265000件      |
+| テスト件数(spec/,t/,xt/ディレクトリ)        | 453000件       | 311000件      |
 | ライセンス                                  | 二条項BSD      | 二条項BSD     |
 | 開発会社によるサポート契約                  | 提供中         | 提供中        |
 
@@ -229,29 +275,27 @@ Differences between Ruby version and Perl version
 2. Xeon E5-2640 2.5GHz x 2 cores | 5000 bogomips | 1GB RAM | Ruby 2.3.4p301
 
 Other spec of Sisimai
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 - [**解析モジュールの一覧**](https://libsisimai.org/ja/engine/)
 - [**バウンス理由の一覧**](https://libsisimai.org/ja/reason/)
 - [**Sisimai::Dataのデータ構造**](https://libsisimai.org/ja/data/)
 
 Contributing
-===============================================================================
-
+===================================================================================================
 Bug report
--------------------------------------------------------------------------------
-もしもSisimaiにバグを発見した場合は[Issues](https://github.com/sisimai/rb-sisimai/issues)
-にて連絡をいただけると助かります。
+---------------------------------------------------------------------------------------------------
+もしもSisimaiにバグを発見した場合は[Issues](https://github.com/sisimai/rb-sisimai/issues)にて連絡を
+いただけると助かります。
 
 Emails could not be parsed
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 Sisimaiで解析できないバウンスメールは
 [set-of-emails/to-be-debugged-because/sisimai-cannot-parse-yet](https://github.com/sisimai/set-of-emails/tree/master/to-be-debugged-because/sisimai-cannot-parse-yet)リポジトリに追加してPull-Requestを送ってください。
 
 Other Information
-===============================================================================
-
+===================================================================================================
 Related sites
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 * __@libsisimai__ | [Sisimai on Twitter (@libsisimai)](https://twitter.com/libsisimai)
 * __libSISIMAI.ORG__ | [Sisimai | The successor to bounceHammer, Library to parse bounce mails](https://libsisimai.org/)
 * __Sisimai Blog__ | [blog.libsisimai.org](http://blog.libsisimai.org/)
@@ -262,7 +306,7 @@ Related sites
 * __Fixtures__ | [set-of-emails - Sample emails for "make test"](https://github.com/sisimai/set-of-emails)
 
 See also
--------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 * [README.md - README.md in English](https://github.com/sisimai/rb-sisimai/blob/master/README.md)
 * [RFC3463 - Enhanced Mail System Status Codes](https://tools.ietf.org/html/rfc3463)
 * [RFC3464 - An Extensible Message Format for Delivery Status Notifications](https://tools.ietf.org/html/rfc3464)
@@ -271,14 +315,14 @@ See also
 * [RFC5322 - Internet Message Format](https://tools.ietf.org/html/rfc5322)
 
 Author
-===============================================================================
+===================================================================================================
 [@azumakuniyuki](https://twitter.com/azumakuniyuki)
 
 Copyright
-===============================================================================
-Copyright (C) 2015-2020 azumakuniyuki, All Rights Reserved.
+===================================================================================================
+Copyright (C) 2015-2021 azumakuniyuki, All Rights Reserved.
 
 License
-===============================================================================
+===================================================================================================
 This software is distributed under The BSD 2-Clause License.
 

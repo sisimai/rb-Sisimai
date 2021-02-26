@@ -1,15 +1,14 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::MailerError checks the bounce reason is "mailererror" or not.
-    # This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::MailerError checks the bounce reason is "mailererror" or not. This class is
+    # called only Sisimai::Reason class.
     #
-    # This is the error that a mailer program has not exited successfully or exited
-    # unexpectedly on a destination mail server.
+    # This is the error that a mailer program has not exited successfully or exited unexpectedly on
+    # a destination mail server.
     #
     #   X-Actual-Recipient: X-Unix; |/home/kijitora/mail/catch.php
     #   Diagnostic-Code: X-Unix; 255
     module MailerError
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/MailerError.pm
       class << self
         Regex = %r{(?>
            \Aprocmail:[ ]    # procmail

@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Qmail parses a bounce email which created by qmail.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Qmail parses a bounce email which created by qmail. Methods in the module are called
+  # from only Sisimai::Message.
   module Qmail
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/qmail.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -104,7 +103,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # Pre process email headers and the body part of the message which generated
         # by qmail, see https://cr.yp.to/qmail.html
         #   e.g.) Received: (qmail 12345 invoked for bounce); 29 Apr 2009 12:34:56 -0000
@@ -123,8 +122,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e.start_with?(StartingOf[:message][0])
@@ -194,8 +193,7 @@ module Sisimai::Lhost
           else
             # Try to match with each error message in the table
             if e['diagnosis'] =~ ReIsOnHold
-              # To decide the reason require pattern match with
-              # Sisimai::Reason::* modules
+              # To decide the reason require pattern match with Sisimai::Reason::* modules
               e['reason'] = 'onhold'
             else
               MessagesOf.each_key do |r|

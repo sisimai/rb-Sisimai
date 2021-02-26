@@ -1,19 +1,17 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::Rejected checks the bounce reason is "rejected" or not.
-    # This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::Rejected checks the bounce reason is "rejected" or not. This class is called
+    # only Sisimai::Reason class.
     #
-    # This is the error that a connection to destination server was rejected by
-    # a sender's email address (envelope from). Sisimai set "rejected" to the
-    # reason of email bounce if the value of Status: field in a bounce email is
-    # "5.1.8" or the connection has been rejected due to the argument of SMTP
-    # MAIL command.
+    # This is the error that a connection to destination server was rejected by a sender's email
+    # address (envelope from). Sisimai set "rejected" to the reason of email bounce if the value of
+    # Status: field in a bounce email is "5.1.8" or the connection has been rejected due to the
+    # argument of SMTP MAIL command.
     #
     #   <kijitora@example.org>:
     #   Connected to 192.0.2.225 but sender was rejected.
     #   Remote host said: 550 5.7.1 <root@nijo.example.jp>... Access denied
     module Rejected
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/Rejected.pm
       class << self
         IsNot = [
           '5.1.0 address rejected',
@@ -88,13 +86,13 @@ module Sisimai
         #                                   false: is not rejected by the sender
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'rejected'
-          tempreason = Sisimai::SMTP::Status.name(argvs.deliverystatus) || 'undefined'
+          return true if argvs['reason'] == 'rejected'
+          tempreason = Sisimai::SMTP::Status.name(argvs['deliverystatus']) || 'undefined'
           return true if tempreason == 'rejected' # Delivery status code points "rejected".
 
           # Check the value of Diagnosic-Code: header with patterns
-          diagnostic = argvs.diagnosticcode.downcase
-          commandtxt = argvs.smtpcommand
+          diagnostic = argvs['diagnosticcode'].downcase
+          commandtxt = argvs['smtpcommand']
           if commandtxt == 'MAIL'
             # The session was rejected at 'MAIL FROM' command
             return true if match(diagnostic)
@@ -106,8 +104,8 @@ module Sisimai
               return true if match(diagnostic)
             end
           elsif %w[onhold undefined securityerror systemerror].include?(tempreason)
-            # Try to match with message patterns when the temporary reason
-            # is "onhold", "undefined", "securityerror", or "systemerror"
+            # Try to match with message patterns when the temporary reason is "onhold", "undefined",
+            # "securityerror", or "systemerror"
             return true if match(diagnostic)
           end
           return false

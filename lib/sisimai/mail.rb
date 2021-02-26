@@ -1,10 +1,7 @@
 module Sisimai
-  # Sisimai::Mail is a handler of UNIX mbox or Maildir for reading each mail.
-  # It is a wrapper class of Sisimai::Mail::Mbox, Sisimai::Mail::Maildir, and
-  # Sisimai::Mail::Memory classes.
+  # Sisimai::Mail is a handler of UNIX mbox or Maildir for reading each mail. It is a wrapper class
+  # of Sisimai::Mail::Mbox, Sisimai::Mail::Maildir, and Sisimai::Mail::Memory classes.
   class Mail
-    # Imported from p5-Sisimail/lib/Sisimai/Mail.pm
-
     # :path [String] path to mbox or Maildir/
     # :kind [String] Data type: mailbox, maildir, or stdin
     # :data [Sisimai::Mail::[Mbox,Maildir,Memory,STDIN]] Object
@@ -47,8 +44,7 @@ module Sisimai
           end
         end
       elsif argv1.is_a?(IO)
-        # Read from STDIN
-        # The argument neither a mailbox nor a Maildir/.
+        # Read from STDIN, The argument neither a mailbox nor a Maildir/.
         classname = self.class.to_s << '::STDIN'
         parameter['kind'] = 'stdin'
         parameter['path'] = '<STDIN>'

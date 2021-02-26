@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Biglobe parses a bounce email which created by BIGLOBE.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Biglobe parses a bounce email which created by BIGLOBE. Methods in the module
+  # are called from only Sisimai::Message.
   module Biglobe
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Biglobe.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -22,7 +21,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['from'] =~ /postmaster[@](?:biglobe|inacatv|tmtv|ttv)[.]ne[.]jp/
         return nil unless mhead['subject'].start_with?('Returned mail:')
 
@@ -34,8 +33,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e == StartingOf[:message][0]
@@ -70,7 +69,7 @@ module Sisimai::Lhost
             end
 
             r = Sisimai::Address.s3s4(cv[1])
-            next unless Sisimai::RFC5322.is_emailaddress(r)
+            next unless Sisimai::Address.is_emailaddress(r)
             v['recipient'] = r
             recipients += 1
           else

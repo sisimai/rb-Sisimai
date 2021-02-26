@@ -5,7 +5,7 @@ gemspec name: 'sisimai'
 
 group :development, :test do
   gem 'rake',  :require => false
-  gem 'rspec', :require => false
+  gem 'minitest', :require => false
   gem 'coveralls', :require => false
 end
 

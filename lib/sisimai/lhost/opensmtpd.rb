@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::OpenSMTPD parses a bounce email which created by
-  # OpenSMTPD. Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::OpenSMTPD parses a bounce email which created by OpenSMTPD. Methods in the module
+  # are called from only Sisimai::Message.
   module OpenSMTPD
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/OpenSMTPD.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -70,7 +69,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['subject'].start_with?('Delivery status notification')
         return nil unless mhead['from'].start_with?('Mailer Daemon <')
         return nil unless mhead['received'].any? { |a| a.include?(' (OpenSMTPD) with ') }
@@ -83,8 +82,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e.start_with?(StartingOf[:message][0])

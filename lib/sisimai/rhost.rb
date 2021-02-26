@@ -1,11 +1,9 @@
 module Sisimai
-  # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-  # object as an argument of get() method when the value of rhost of the object
-  # is listed in the results of Sisimai::Rhost->list method.
-  # This class is called only Sisimai::Data class.
+  # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+  # of get() method when the value of rhost of the object is listed in the results of Sisimai::Rhost
+  # ->list method. This class is called only Sisimai::Data class.
   module Rhost
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Rhost.pm
       RhostClass = {
         '.prod.outlook.com'           => 'ExchangeOnline',
         '.protection.outlook.com'     => 'ExchangeOnline',
@@ -44,11 +42,11 @@ module Sisimai
       end
 
       # Detect the bounce reason from certain remote hosts
-      # @param    [Sisimai::Data] argvs   Parsed email object
-      # @param    [String]        proxy   The alternative of the "rhost"
-      # @return   [String]                The value of bounce reason
+      # @param    [Hash]   argvs  Parsed email data
+      # @param    [String] proxy  The alternative of the "rhost"
+      # @return   [String]        The value of bounce reason
       def get(argvs, proxy = nil)
-        remotehost = proxy || argvs.rhost.downcase
+        remotehost = proxy || argvs['rhost'].downcase
         rhostclass = ''
         modulename = ''
 
@@ -68,3 +66,4 @@ module Sisimai
     end
   end
 end
+

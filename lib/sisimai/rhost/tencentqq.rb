@@ -1,11 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "rhost" of the object
-    # is "mx*.qq.com". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "rhost" of the object is "mx*.qq.com". This class is called
+    # only Sisimai::Data class.
     module TencentQQ
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/TencentQQ.pm
         MessagesOf = {
           # https://service.mail.qq.com/cgi-bin/help?id=20022
           'dmarc check failed'                    => 'blocked',
@@ -30,9 +29,9 @@ module Sisimai
         # @param    [Sisimai::Data] argvs   Parsed email object
         # @return   [String]                The bounce reason at Tencent QQ
         def get(argvs)
-          return argvs.reason unless argvs.reason.empty?
+          return argvs['reason'] unless argvs['reason'].empty?
 
-          statusmesg = argvs.diagnosticcode.downcase
+          statusmesg = argvs['diagnosticcode'].downcase
           reasontext = ''
 
           MessagesOf.each_key do |e|

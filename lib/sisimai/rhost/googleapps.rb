@@ -1,11 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "rhost" of the object
-    # is "aspmx.l.google.com". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "rhost" of the object is "aspmx.l.google.com". This class is
+    # called only Sisimai::Data class.
     module GoogleApps
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/GoogleApps.pm
         StatusList = {
           # https://support.google.com/a/answer/3726730
           'X.1.1' => [{ reason: 'userunknown', string: ['The email account that you tried to reach does not exist.'] }],
@@ -105,15 +104,15 @@ module Sisimai
         # @return   [String]                The bounce reason for Google Apps
         # @see      https://support.google.com/a/answer/3726730?hl=en
         def get(argvs)
-          return argvs.reason unless argvs.reason.empty?
+          return argvs['reason'] unless argvs['reason'].empty?
 
-          (statuscode = argvs.deliverystatus.clone)[0] = 'X'
+          (statuscode = argvs['deliverystatus'].clone)[0] = 'X'
           return '' unless StatusList[statuscode]
 
           reasontext = ''
           StatusList[statuscode].each do |e|
             # Try to match
-            next unless e[:string].any? { |a| argvs.diagnosticcode.include?(a) }
+            next unless e[:string].any? { |a| argvs['diagnosticcode'].include?(a) }
             reasontext = e[:reason]
             break
           end

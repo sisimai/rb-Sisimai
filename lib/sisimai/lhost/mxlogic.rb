@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::MXLogic parses a bounce email which created by
-  # McAfee SaaS (formerly MX Logic).
+  # Sisimai::Lhost::MXLogic parses a bounce email which created by McAfee SaaS (formerly MX Logic).
   # Methods in the module are called from only Sisimai::Message.
   module MXLogic
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/MXLogic.pm
       # Based on Sisimai::Lhost::Exim
       require 'sisimai/lhost'
 
@@ -16,7 +14,7 @@ module Sisimai::Lhost
         %r/SMTP error from remote (?:mail server|mailer) after end of ([A-Za-z]{4})/,
       ].freeze
       MessagesOf = {
-        # find exim/ -type f -exec grep 'message = US' {} /dev/null \;
+        # % find exim/ -type f -exec grep 'message = US' {} /dev/null \;
         # route.c:1158|  DEBUG(D_uid) debug_printf("getpwnam() returned NULL (user not found)\n");
         'userunknown' => ['user not found'],
         # transports/smtp.c:3524|  addr->message = US"all host address lookups failed permanently";
@@ -74,7 +72,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-MX-Bounce: mta/src/queue/bounce
         # X-MXL-NoteHash: ffffffffffffffff-0000000000000000000000000000000000000000
         # X-MXL-Hash: 4c9d4d411993da17-bbd4212b6c887f6c23bab7db4bd87ef5edc00758
@@ -100,8 +98,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e == StartingOf[:message][0]

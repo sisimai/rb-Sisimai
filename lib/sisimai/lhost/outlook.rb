@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Outlook parses a bounce email which created by
-  # Microsoft Outlook.com.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Outlook parses a bounce email which created by Microsoft Outlook.com. Methods in
+  # the module are called from only Sisimai::Message.
   module Outlook
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/US/Outlook.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -20,7 +18,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-Message-Delivery: Vj0xLjE7RD0wO0dEPTA7U0NMPTk7bD0xO3VzPTE=
         # X-Message-Info: AuEzbeVr9u5fkDpn2vR5iCu5wb6HBeY4iruBjnutBzpStnUabbM...
         match  = 0
@@ -43,8 +41,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

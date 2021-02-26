@@ -16,7 +16,10 @@ Received: from mailgw.example.co.jp (mx [192.0.2.98])
 From: Postmaster@example.co.jp
 To: "Neko" <kijitora@example.org>
 Subject: DELIVERY FAILURE: 
- ユーザー Neko (kijitora@example.co.jp) は Domino ディレクトリには見つかりません。
+ =?ISO-2022-JP?B?GyRCJWYhPCU2ITwbKEI=?= Neko (kijitora@example.co.jp)
+ =?US-ASCII?Q??=
+ =?ISO-2022-JP?B?GyRCJE8bKEI=?= Domino =?ISO-2022-JP?B?GyRCJUclIyVsGyhC?=
+ =?ISO-2022-JP?B?GyRCJS8lSCVqJEskTzgrJEQkKyRqJF4kOyRzISMbKEI=?=
 Date: Thu, 08 Jul 2012 00:03:54 +0800
 MIME-Version: 1.0
 X-Priority: 3 (Normal)
@@ -40,7 +43,7 @@ was not delivered to:
 
 because:
 
-  ユーザー Neko (kijitora@example.co.jp) は Domino ディレクトリには見つかりません。
+  $B%f!<%6!<(B Neko (kijitora@example.co.jp) $B$O(B Domino $B%G%#%l%/%H%j$K$O8+$D$+$j$^$;$s!#(B
 
 
 --==0000000000000000000000
@@ -51,7 +54,7 @@ Reporting-MTA: dns;mx.example.co.jp
 Final-Recipient: rfc822;kijitora@example.co.jp
 Action: failed
 Status: 5.0.0
-Diagnostic-Code: X-Notes; ユーザー Neko (kijitora@example.co.jp) は Domino ディレクトリには見つかりません。
+Diagnostic-Code: X-Notes; $B%f!<%6!<(BNeko (kijitora@example.co.jp) $B$O(B Domino $B%G%#%l%/%H%j$K$O8+$D$+$j$^$;$s!#(B
  
 --==0000000000000000000000
 Content-Type: message/rfc822

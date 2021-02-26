@@ -12,11 +12,10 @@ RUBY  ?= ruby
 JRUBY ?= /usr/local/jr
 RAKE  ?= rake
 MKDIR := mkdir -p
-RSPEC := rspec -Ilib -f progress
 CP    := cp
 RM    := rm -f
 
-DEPENDENCIES  = bundle rake rspec
+DEPENDENCIES  = bundle rake minitest
 .DEFAULT_GOAL = git-status
 REPOS_TARGETS = git-status git-push git-commit-amend git-tag-list git-diff \
 				git-reset-soft git-rm-cached git-branch
@@ -57,18 +56,20 @@ release:
 		PATH="$(JRUBY)/bin:$$PATH" $(JRUBY)/bin/rake release; \
 	fi
 
-test: cruby-test
+test: user-test author-test
+user-test:
+	rake publictest
+
+author-test:
+	rake privatetest
 
 check:
 	find lib -type f -exec grep --color -E ' $$' {} /dev/null \;
 	find lib -type f -exec grep --color -E '[;][ ]*$$' {} /dev/null \;
 
-cruby-test:
-	$(RAKE) spec
-
 jruby-test:
 	if [ -d "$(JRUBY)" ]; then \
-		PATH="$(JRUBY)/bin:$$PATH" LS_HEAP_SIZE='1024m' $(JRUBY)/bin/rake spec; \
+		PATH="$(JRUBY)/bin:$$PATH" LS_HEAP_SIZE='1024m' $(JRUBY)/bin/rake publictest; \
 	fi
 
 patrol:

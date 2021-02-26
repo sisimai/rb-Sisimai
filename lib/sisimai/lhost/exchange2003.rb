@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Exchange2003 parses a bounce email which created by
-  # Microsoft Exchange Server 2003.
+  # Sisimai::Lhost::Exchange2003 parses a bounce email which created by Microsoft Exchange Server 2003.
   # Methods in the module are called from only Sisimai::Message.
   module Exchange2003
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Exchange2003.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -46,7 +44,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         match = 0
         tryto = []
 
@@ -99,8 +97,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e.start_with?(StartingOf[:message][0])

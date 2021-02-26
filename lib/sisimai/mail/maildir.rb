@@ -1,9 +1,7 @@
 module Sisimai
   class Mail
-    # Sisimai::Mail::Maildir is a reader for getting contents of each email in
-    # the Maildir/ directory.
+    # Sisimai::Mail::Maildir is a reader for getting contents of each email in the Maildir/ directory.
     class Maildir
-      # Imported from p5-Sisimail/lib/Sisimai/Mail/Maildir.pm
       # :dir    [String] Path to Maildir/
       # :size   [Integer] The number of files/directories in the Maildir/
       # :path   [String] Path to each file

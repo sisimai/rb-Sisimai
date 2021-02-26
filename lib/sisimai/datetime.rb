@@ -1,7 +1,6 @@
 module Sisimai
   # Sisimai::DateTime provide methods for dealing date and time.
   module DateTime
-    # Imported from p5-Sisimail/lib/Sisimai/DateTime.pm
     require 'date'
 
     class << self
@@ -394,8 +393,8 @@ module Sisimai
 
       # Abbreviation -> Tiemzone
       # @param    [String] argv1  Abbr. e.g.) JST, GMT, PDT
-      # @return   [String, Nil]   +0900, +0000, -0600 or nil if the argument is
-      #                           invalid format or not supported abbreviation
+      # @return   [String, Nil]   +0900, +0000, -0600 or nil if the argument is invalid format or
+      #                           not supported abbreviation
       # @example  Get the timezone string of "JST"
       #   abbr2tz('JST')  #=> '+0900'
       def abbr2tz(argv1)
@@ -405,8 +404,7 @@ module Sisimai
 
       # Convert to second
       # @param    [String] argv1  Timezone string e.g) +0900
-      # @return   [Integer, Nil]  n: seconds or nil it the argument is invalid
-      #                           format string
+      # @return   [Integer, Nil]  n: seconds or nil it the argument is invalid format string
       # @see      second2tz
       # @example  Convert '+0900' to seconds
       #   tz2second('+0900')  #=> 32400

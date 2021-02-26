@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::GSuite parses a bounce email which created by G Suite.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::GSuite parses a bounce email which created by G Suite. Methods in the module are
+  # called from only Sisimai::Message.
   module GSuite
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/GSuite.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -24,7 +23,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['from'].end_with?('<mailer-daemon@googlemail.com>')
         return nil unless mhead['subject'].start_with?('Delivery Status Notification')
         return nil unless mhead['x-gm-message-state']
@@ -44,8 +43,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or message/delivery-status part
             readcursor |= Indicators[:deliverystatus] if e =~ MarkingsOf[:message]
@@ -91,8 +90,8 @@ module Sisimai::Lhost
               permessage[fieldtable[o[0]]] = o[2]
             end
           else
-            # The line does not begin with a DSN field defined in RFC3464
-            # Append error messages continued from the previous line
+            # The line does not begin with a DSN field defined in RFC3464 Append error messages continued
+            # from the previous line
             if endoferror == false && v && ! v['diagnosis'].to_s.empty?
               endoferror ||= true if e.empty?
 
@@ -115,8 +114,7 @@ module Sisimai::Lhost
               next if e =~ MarkingsOf[:html]
 
               if anotherset['diagnosis']
-                # Continued error messages from the previous line like
-                # "550 #5.1.0 Address rejected."
+                # Continued error messages from the previous line like "550 #5.1.0 Address rejected."
                 next if e =~ /\AContent-Type:/
                 next if emptylines > 5
                 if e.empty?

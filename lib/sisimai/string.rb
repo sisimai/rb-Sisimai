@@ -1,7 +1,6 @@
 module Sisimai
   # Sisimai::String provide utilities for dealing string
   module String
-    # Imported from p5-Sisimail/lib/Sisimai/String.pm
     class << self
       Match = {
         html: %r|<html[ >].+?</html>|im,

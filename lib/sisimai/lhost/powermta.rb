@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::PowerMTA parses a bounce email which created by
-  # amavsid-new. Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::PowerMTA parses a bounce email which created by PowerMTA. Methods in the module
+  # are called from only Sisimai::Message.
   module PowerMTA
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/PowerMTA.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -27,7 +26,7 @@ module Sisimai::Lhost
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
       # @since v4.25.6
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['subject'].to_s.start_with?('Delivery report')
 
         require 'sisimai/rfc1894'
@@ -42,8 +41,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or message/delivery-status part
             readcursor |= Indicators[:deliverystatus] if e.start_with?(StartingOf[:message][0])

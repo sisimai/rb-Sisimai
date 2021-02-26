@@ -1,11 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "rhost" of the object
-    # is "*.email.ua". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "rhost" of the object is "*.email.ua". This class is called
+    # only Sisimai::Data class.
     module IUA
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/IUA.pm
         ErrorCodes = {
           # http://mail.i.ua/err/$(CODE)
           '1'  => 'norelaying',  # The use of SMTP as mail gate is forbidden.
@@ -24,9 +23,9 @@ module Sisimai
         # @param    [Sisimai::Data] argvs   Parsed email object
         # @return   [String]                The bounce reason at https://www.i.ua/
         def get(argvs)
-          return argvs.reason unless argvs.reason.empty?
+          return argvs['reason'] unless argvs['reason'].empty?
 
-          if cv = argvs.diagnosticcode.downcase.match(%r|[.]i[.]ua/err/(\d+)|)
+          if cv = argvs['diagnosticcode'].downcase.match(%r|[.]i[.]ua/err/(\d+)|)
             return ErrorCodes[cv[1]] || ''
           end
           return ''

@@ -1,14 +1,13 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::SecurityError checks the bounce reason is "securityerror"
-    # or not. This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::SecurityError checks the bounce reason is "securityerror" or not. This class
+    # is called only Sisimai::Reason class.
     #
-    # This is the error that a security violation was detected on a destination
-    # mail server. Depends on the security policy on the server, a sender's email
-    # address is camouflaged address.
+    # This is the error that a security violation was detected on a destination mail server. Depends
+    # on the security policy on the server, a sender's email address is camouflaged address.
     #
-    # Sisimai will set "securityerror" to the reason
-    # of email bounce if the value of Status: field in a bounce email is "5.7.*".
+    # Sisimai will set "securityerror" to the reason of email bounce if the value of Status: field
+    # in a bounce email is "5.7.*".
     #
     #   Action: failed
     #   Status: 5.7.1
@@ -17,7 +16,6 @@ module Sisimai
     #   Last-Attempt-Date: Tue, 28 Apr 2009 11:02:45 +0900 (JST)
     #
     module SecurityError
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/SecurityError.pm
       class << self
         Regex = %r{(?>
            account[ ]not[ ]subscribed[ ]to[ ]ses

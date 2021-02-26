@@ -1,13 +1,12 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::HasMoved checks the bounce reason is "hasmoved" or not.
-    # This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::HasMoved checks the bounce reason is "hasmoved" or not. This class is called
+    # only Sisimai::Reason class.
     #
-    # This is the error that a user's mailbox has moved (and is not forwarded
-    # automatically). Sisimai will set "hasmoved" to the reason of email bounce
-    # if the value of Status: field in a bounce email is "5.1.6".
+    # This is the error that a user's mailbox has moved (and is not forwarded automatically). Sisimai
+    # will set "hasmoved" to the reason of email bounce if the value of Status: field in a bounce email
+    # is "5.1.6".
     module HasMoved
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/HasMoved.pm
       class << self
         Index = [' has been replaced by ']
 
@@ -30,8 +29,8 @@ module Sisimai
         #                                   false: Has not moved
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'hasmoved'
-          return true if match(argvs.diagnosticcode.downcase)
+          return true if argvs['reason'] == 'hasmoved'
+          return true if match(argvs['diagnosticcode'].downcase)
           return false
         end
 

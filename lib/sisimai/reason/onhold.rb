@@ -1,12 +1,9 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::OnHold checks the bounce reason is "onhold" or not. This
-    # class is called only Sisimai::Reason class.
-    #
-    # Sisimai will set C<onhold> to the reason of email bounce if there is no
+    # Sisimai::Reason::OnHold checks the bounce reason is "onhold" or not. This class is called only
+    # Sisimai::Reason class. Sisimai will set "onhold" to the reason of email bounce if there is no
     # (or less) detailed information about email bounce for judging the reason.
     module OnHold
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/OnHold.pm
       class << self
         def text; return 'onhold'; end
         def description; return 'Sisimai could not decided the reason due to there is no (or less) detailed information for judging the reason'; end
@@ -25,9 +22,9 @@ module Sisimai
         #                                   false: is not "onhold"
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return nil  if argvs.deliverystatus.empty?
-          return true if argvs.reason == 'onhold'
-          return true if Sisimai::SMTP::Status.name(argvs.deliverystatus).to_s == 'onhold'
+          return nil  if argvs['deliverystatus'].empty?
+          return true if argvs['reason'] == 'onhold'
+          return true if Sisimai::SMTP::Status.name(argvs['deliverystatus']).to_s == 'onhold'
           return false
         end
       end

@@ -1,7 +1,6 @@
 module Sisimai
   # Sisimai::ARF is a parser for email returned as a FeedBack Loop report message.
   module ARF
-    # Imported from p5-Sisimail/lib/Sisimai/ARF.pm
     class << self
       require 'sisimai/lhost'
       require 'sisimai/rfc5322'
@@ -68,7 +67,7 @@ module Sisimai
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless self.is_arf(mhead)
 
         dscontents = [Sisimai::Lhost.DELIVERYSTATUS]
@@ -141,9 +140,8 @@ module Sisimai
               dscontents[-1]['recipient'] = Sisimai::Address.s3s4(cv[1])
               recipients += 1
 
-              # The "X-HmXmrOriginalRecipient" header appears only once so
-              # we take this opportunity to hard-code ARF headers missing in
-              # Microsoft's implementation.
+              # The "X-HmXmrOriginalRecipient" header appears only once so we take this opportunity
+              # to hard-code ARF headers missing in Microsoft's implementation.
               arfheaders['feedbacktype'] = 'abuse'
               arfheaders['agent'] = 'Microsoft Junk Mail Reporting Program'
 
@@ -193,8 +191,7 @@ module Sisimai
 
             if cv = e.match(/\AOriginal-Rcpt-To:[ ]+[<]?(.+)[>]?\z/) ||
                     e.match(/\ARedacted-Address:[ ]([^ ].+[@])\z/)
-              # Original-Rcpt-To header field is optional and may appear any
-              # number of times as appropriate:
+              # Original-Rcpt-To header field is optional and may appear any number of times as appropriate:
               # Original-Rcpt-To: <user@example.com>
               # Redacted-Address: localpart@
               if v['recipient']
@@ -211,11 +208,9 @@ module Sisimai
               arfheaders['feedbacktype'] = cv[1]
 
             elsif cv = e.match(/\AAuthentication-Results:[ ]*(.+)\z/)
-              # "Authentication-Results" indicates the result of one or more
-              # authentication checks run by the report generator.
-              #
-              # Authentication-Results: mail.example.com;
-              #   spf=fail smtp.mail=somespammer@example.com
+              # "Authentication-Results" indicates the result of one or more authentication checks
+              # run by the report generator.
+              #   Authentication-Results: mail.example.jp; spf=fail smtp.mail=spammer@example.com
               arfheaders['authres'] = cv[1]
 
             elsif cv = e.match(/\AUser-Agent:[ ]*(.+)\z/)
@@ -224,8 +219,7 @@ module Sisimai
               arfheaders['agent'] = cv[1]
 
             elsif cv = e.match(/\A(?:Received|Arrival)-Date:[ ]*(.+)\z/)
-              # Arrival-Date header is optional and MUST NOT appear more than
-              # once.
+              # Arrival-Date header is optional and MUST NOT appear more than once.
               # Received-Date: Thu, 29 Apr 2010 00:00:00 JST
               # Arrival-Date: Thu, 29 Apr 2010 00:00:00 +0000
               arfheaders['date'] = cv[1]
@@ -260,16 +254,15 @@ module Sisimai
             # pick the address from To: header in message/rfc822 part.
             dscontents[-1]['recipient'] = Sisimai::Address.s3s4(cv[1])
           else
-            # Insert pseudo recipient address when there is no valid recipient
-            # address in the message.
+            # Insert a pseudo recipient address when there is no valid recipient address in the message.
             dscontents[-1]['recipient'] = Sisimai::Address.undisclosed('r')
           end
           recipients = 1
         end
 
         unless rfc822part =~ /\bFrom: [^ ]+[@][^ ]+\b/
-          # There is no "From:" header in the original message
-          # Append the value of "Original-Mail-From" value as a sender address.
+          # There is no "From:" header in the original message. Append the value of "Original-Mail-From"
+          # value as a sender address.
           rfc822part << 'From: ' << commondata['from'] + "\n" unless commondata['from'].empty?
         end
 
@@ -288,7 +281,6 @@ module Sisimai
           arfheaders.each_key { |a| e[a] ||= arfheaders[a] || '' }
           e.delete('authres')
 
-          e['softbounce'] = -1
           e['diagnosis']  = commondata['diagnosis'] unless e['diagnosis']
           e['diagnosis']  = Sisimai::String.sweep(e['diagnosis'])
           e['date']       = mhead['date'] if e['date'].empty?
@@ -303,8 +295,8 @@ module Sisimai
             e['rhost'] = commondata['rhost']
 
           elsif cv = e['diagnosis'].match(/\breceived from IP address ([^ ]+)/)
-            # This is an email abuse report for an email message received
-            # from IP address 24.64.1.1 on Thu, 29 Apr 2010 00:00:00 +0000
+            # This is an email abuse report for an email message received from IP address 24.64.1.1
+            # on Thu, 29 Apr 2010 00:00:00 +0000
             e['rhost'] = cv[1]
           end
         end
@@ -313,3 +305,4 @@ module Sisimai
     end
   end
 end
+

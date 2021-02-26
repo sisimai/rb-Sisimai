@@ -1,20 +1,18 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::UserUnknown checks the bounce reason is "userunknown" or
-    # not. This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::UserUnknown checks the bounce reason is "userunknown" or not. This class is
+    # called only Sisimai::Reason class.
     #
-    # This is the error that a local part (Left hand side of @ sign) of a recipient's
-    # email address does not exist. In many case, a user has changed internet service
-    # provider, or has quit company, or the local part is misspelled. Sisimai will
-    # set "userunknown" to the reason of email bounce if the value of Status: field
-    # in a bounce email is "5.1.1", or connection was refused at SMTP RCPT command,
-    # or the contents of Diagnostic-Code: field represents that it is unknown user.
+    # This is the error that a local part (Left hand side of @ sign) of a recipient's email address
+    # does not exist. In many case, a user has changed internet service provider, or has quit company,
+    # or the local part is misspelled. Sisimai will set "userunknown" to the reason of email bounce
+    # if the value of Status: field in a bounce email is "5.1.1", or connection was refused at SMTP
+    # RCPT command, or the contents of Diagnostic-Code: field represents that it is unknown user.
     #
     #   <kijitora@example.co.jp>: host mx01.example.co.jp[192.0.2.8] said:
     #   550 5.1.1 Address rejected kijitora@example.co.jp (in reply to
     #   RCPT TO command)
     module UserUnknown
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/UserUnknown.pm
       class << self
         PreMatches = %w[NoRelaying Blocked MailboxFull HasMoved Rejected]
         ModulePath = {
@@ -167,12 +165,12 @@ module Sisimai
         #                                   false: is not unknown user.
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'userunknown'
+          return true if argvs['reason'] == 'userunknown'
 
-          tempreason = Sisimai::SMTP::Status.name(argvs.deliverystatus) || ''
+          tempreason = Sisimai::SMTP::Status.name(argvs['deliverystatus']) || ''
           return false if tempreason == 'suspend'
 
-          diagnostic = argvs.diagnosticcode.downcase
+          diagnostic = argvs['diagnosticcode'].downcase
           if tempreason == 'userunknown'
             # *.1.1 = 'Bad destination mailbox address'
             #   Status: 5.1.1
@@ -198,7 +196,7 @@ module Sisimai
             end
             return true unless matchother # Did not match with other message patterns
 
-          elsif argvs.smtpcommand == 'RCPT'
+          elsif argvs['smtpcommand'] == 'RCPT'
             # When the SMTP command is not "RCPT", the session rejected by other
             # reason, maybe.
             return true if match(diagnostic)

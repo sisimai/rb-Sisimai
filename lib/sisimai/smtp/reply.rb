@@ -56,10 +56,8 @@
 #
 module Sisimai
   module SMTP
-    # Sisimai::SMTP::Reply is utilities for getting SMTP Reply Code value from
-    # error message text.
+    # Sisimai::SMTP::Reply is utilities for getting SMTP Reply Code value from error message text.
     module Reply
-      # Imported from p5-Sisimail/lib/Sisimai/SMTP/Reply.pm
       class << self
         IP4Re = %r{\b
           (?:\d|[01]?\d\d|2[0-4]\d|25[0-5])[.]
@@ -70,16 +68,15 @@ module Sisimai
 
         # Get SMTP Reply Code from the given string
         # @param    [String] argv1  String including SMTP Reply Code like 550
-        # @return   [String]        SMTP Reply Code or Nil if the first argument
-        #                           did not include SMTP Reply Code value
+        # @return   [String]        SMTP Reply Code
+        #           [Nil]           The first argument did not include SMTP Reply Code value
         def find(argv1 = nil)
           return nil unless argv1
           return nil if argv1.empty?
           return nil if argv1.upcase.include?('X-UNIX')
 
-          # Convert found IPv4 addresses to '***.***.***.***' to avoid that
-          # the following code detects an octet of the IPv4 adress as an SMTP
-          # reply code.
+          # Convert found IPv4 addresses to '***.***.***.***' to avoid that the following code
+          # detects an octet of the IPv4 adress as an SMTP reply code.
           argv1 = argv1.gsub(/#{IP4Re}/, '***.***.***.***') if argv1 =~ IP4Re
 
           if cv = argv1.match(/\b([45][0-7][0-9])\b/) || argv1.match(/\b(25[0-3])\b/)

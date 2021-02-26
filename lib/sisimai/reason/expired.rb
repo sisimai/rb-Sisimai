@@ -1,13 +1,11 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::Expired checks the bounce reason is "expired" or not.
-    # This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::Expired checks the bounce reason is "expired" or not. This class is called only
+    # Sisimai::Reason class.
     #
-    # This is the error that delivery time has expired due to connection failure
-    # or network error and the message you sent has been in the queue for long
-    # time.
+    # This is the error that delivery time has expired due to connection failure or network error and
+    # the message you sent has been in the queue for long time.
     module Expired
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/Expired.pm
       class << self
         Index = [
           'connection timed out',

@@ -1,12 +1,11 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::PolicyViolation checks the bounce reason is "policyviolation"
-    # or not. This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::PolicyViolation checks the bounce reason is "policyviolation" or not. This class
+    # is called only Sisimai::Reason class.
     #
-    # This is the error that a policy violation was detected on a destination mail
-    # host. When a header content or a format of the original message violates
-    # security policies, or multiple addresses exist in the From: header, Sisimai
-    # will set "policyviolation".
+    # This is the error that a policy violation was detected on a destination mail host. When a header
+    # content or a format of the original message violates security policies, or multiple addresses
+    # exist in the From: header, Sisimai will set "policyviolation".
     #
     #   Status: 5.7.0
     #   Remote-MTA: DNS; gmail-smtp-in.l.google.com
@@ -14,7 +13,6 @@ module Sisimai
     #   Last-Attempt-Date: Tue, 28 Apr 2009 11:02:45 +0900 (JST)
     #
     module PolicyViolation
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/PolicyViolation.pm
       class << self
         Index = [
           'an illegal attachment on your message',

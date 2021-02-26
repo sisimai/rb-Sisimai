@@ -1,12 +1,9 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::Suspend checks the bounce reason is C<suspend> or not.
-    # This class is called only Sisimai::Reason class.
-    #
-    # This is the error that a recipient account is being suspended due to
-    # unpaid or other reasons.
+    # Sisimai::Reason::Suspend checks the bounce reason is "suspend" or not. This class is called
+    # only Sisimai::Reason class.  This is the error that a recipient account is being suspended
+    # due to unpaid or other reasons.
     module Suspend
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/Suspend.pm
       class << self
         Index = [
           ' is currently suspended',
@@ -16,6 +13,7 @@ module Sisimai
           'has been suspended',
           'invalid/inactive user',
           'is a deactivated mailbox', # http://service.mail.qq.com/cgi-bin/help?subtype=1&&id=20022&&no=1000742
+          'is unavailable: user is terminated',
           'mailbox currently suspended',
           'mailbox is frozen',
           'mailbox unavailable or access denied',
@@ -46,9 +44,9 @@ module Sisimai
         #                                   false: is not suspended
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return nil  if argvs.deliverystatus.empty?
-          return true if argvs.reason == 'suspend'
-          return true if match(argvs.diagnosticcode.downcase)
+          return nil  if argvs['deliverystatus'].empty?
+          return true if argvs['reason'] == 'suspend'
+          return true if match(argvs['diagnosticcode'].downcase)
           return false
         end
 
