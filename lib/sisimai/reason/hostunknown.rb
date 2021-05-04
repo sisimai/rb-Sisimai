@@ -1,12 +1,10 @@
 module Sisimai
   module Reason
-    # This is the error that a domain part ( Right hand side of @ sign ) of a
-    # recipient's email address does not exist. In many case, the domain part
-    # is misspelled, or the domain name has been expired.
-    # Sisimai will set "hostunknown" to the reason of email bounce if the value
-    # of Status: field in a bounce mail is "5.1.2".
+    # This is the error that a domain part ( Right hand side of @ sign ) of a recipient's email
+    # address does not exist. In many case, the domain part is misspelled, or the domain name has
+    # been expired. Sisimai will set "hostunknown" to the reason of email bounce if the value of
+    # Status: field in a bounce mail is "5.1.2".
     module HostUnknown
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/HostUnknown.pm
       class << self
         Index = [
           'domain does not exist',
@@ -48,10 +46,10 @@ module Sisimai
         #                                   false: is not unknown host.
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'hostunknown'
+          return true if argvs['reason'] == 'hostunknown'
 
-          diagnostic = argvs.diagnosticcode.downcase || ''
-          statuscode = argvs.deliverystatus || ''
+          diagnostic = argvs['diagnosticcode'].downcase || ''
+          statuscode = argvs['deliverystatus'] || ''
 
           if Sisimai::SMTP::Status.name(statuscode).to_s == 'hostunknown'
             # Status: 5.1.2

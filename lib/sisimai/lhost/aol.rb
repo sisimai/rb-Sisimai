@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Aol parses a bounce email which created by Aol Mail.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Aol parses a bounce email which created by Aol Mail. Methods in the module are
+  # called from only Sisimai::Message.
   module Aol
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Aol.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -19,7 +18,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-AOL-IP: 192.0.2.135
         # X-AOL-VSS-INFO: 5600.1067/98281
         # X-AOL-VSS-CODE: clean
@@ -45,8 +44,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

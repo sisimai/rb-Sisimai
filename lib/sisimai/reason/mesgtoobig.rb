@@ -1,12 +1,10 @@
 module Sisimai
   module Reason
-    # This is the error that a sent email size is too big for a destination mail
-    # server. In many case, There are many attachment files with email, or the
-    # file size is too large.
-    # Sisimai will set "mesgtoobig" to the reason of email bounce if the value
-    # of Status: field in a bounce email is "5.3.4".
+    # This is the error that a sent email size is too big for a destination mail server. In many
+    # case, There are many attachment files with email, or the file size is too large. Sisimai will
+    # set "mesgtoobig" to the reason of email bounce if the value of Status: field in a bounce email
+    # is "5.3.4".
     module MesgTooBig
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/MesgTooBig.pm
       class << self
         Index = [
           'exceeded maximum inbound message size',
@@ -42,9 +40,9 @@ module Sisimai
         #                                   false: is not big
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'mesgtoobig'
+          return true if argvs['reason'] == 'mesgtoobig'
 
-          statuscode = argvs.deliverystatus || ''
+          statuscode = argvs['deliverystatus'] || ''
           tempreason = Sisimai::SMTP::Status.name(statuscode) || ''
 
           # Delivery status code points "mesgtoobig".
@@ -56,7 +54,7 @@ module Sisimai
           return false if( tempreason == 'exceedlimit' || statuscode == '5.2.3' )
 
           # Check the value of Diagnosic-Code: header with patterns
-          return true if match(argvs.diagnosticcode.downcase)
+          return true if match(argvs['diagnosticcode'].downcase)
           return false
         end
 

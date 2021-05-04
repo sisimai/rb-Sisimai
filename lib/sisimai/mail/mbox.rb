@@ -2,7 +2,6 @@ module Sisimai
   class Mail
     # Sisimai::Mail::Mbox is a mailbox file (UNIX mbox) reader.
     class Mbox
-      # Imported from p5-Sisimail/lib/Sisimai/Mail/Mbox.pm
       # :dir    [String]  Directory name of the mbox
       # :file   [String]  File name of the mbox
       # :path   [String]  Path to mbox
@@ -13,9 +12,9 @@ module Sisimai
       attr_accessor :offset, :handle
 
       # Constructor of Sisimai::Mail::Mbox
-      # @param    [String] argv1            Path to mbox
-      # @return   [Sisimai::Mail::Mbox,Nil] Object or nil if the argument is not
-      #                                     specified or does not exist
+      # @param    [String] argv1          Path to mbox
+      # @return   [Sisimai::Mail::Mbox]   Object
+      #           [Nil]                   is not specified or does not exist
       def initialize(argv1)
         raise Errno::ENOENT   unless File.exist?(argv1)
         raise 'is not a file' unless File.ftype(argv1) == 'file'

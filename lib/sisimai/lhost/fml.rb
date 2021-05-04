@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::FML parses a bounce email which created by fml.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::FML parses a bounce email which created by fml. Methods in the module are called
+  # from only Sisimai::Message.
   module FML
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/FML.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -51,7 +50,7 @@ module Sisimai::Lhost
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
       # @since v4.22.3
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['x-mlserver']
         return nil unless mhead['from'] =~ /.+[-]admin[@].+/
         return nil unless mhead['message-id'] =~ /\A[<]\d+[.]FML.+[@].+[>]\z/
@@ -63,8 +62,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           next if e.empty?
 
           # Duplicated Message-ID in <2ndml@example.com>.

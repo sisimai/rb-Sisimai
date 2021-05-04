@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::SendGrid parses a bounce email which created by
-  # SendGrid. Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::SendGrid parses a bounce email which created by SendGrid. Methods in the module
+  # are called from only Sisimai::Message.
   module SendGrid
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/SendGrid.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -15,7 +14,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # Return-Path: <apps@sendgrid.net>
         # X-Mailer: MIME-tools 5.502 (Entity 5.502)
         return nil unless mhead['return-path']
@@ -36,8 +35,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0
@@ -122,8 +121,7 @@ module Sisimai::Lhost
           end
 
           if e['status'] == '5.0.0' || e['status'] == '4.0.0'
-            # Get the value of D.S.N. from the error message or the value of
-            # Diagnostic-Code header.
+            # Get the value of D.S.N. from the error message or the value of Diagnostic-Code header.
             e['status'] = Sisimai::SMTP::Status.find(e['diagnosis']) || e['status']
           end
 
@@ -131,8 +129,7 @@ module Sisimai::Lhost
             # Action: expired
             e['reason'] = 'expired'
             if !e['status'] || e['status'].end_with?('.0.0')
-              # Set pseudo Status code value if the value of Status is not
-              # defined or 4.0.0 or 5.0.0.
+              # Set pseudo Status code value if the value of Status is not defined or 4.0.0 or 5.0.0.
               e['status'] = Sisimai::SMTP::Status.code('expired') || e['status']
             end
           end

@@ -1,11 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "destination" of
-    # the object is "charter.net". This class is called only Sisimai::Data class.
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "destination" of the object is "charter.net". This class is
+    # called only Sisimai::Data class.
     module Cox
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/Cox.pm
         ErrorCodes = {
           # https://www.cox.com/residential/support/email-error-codes.html
           'CXBL'      => 'blocked',       # The sending IP address has been blocked by Cox due to exhibiting spam-like behavior.
@@ -83,7 +82,7 @@ module Sisimai
         # @return   [String, Nil]           The bounce reason at Cox
         # @since v4.25.8
         def get(argvs)
-          statusmesg = argvs.diagnosticcode
+          statusmesg = argvs['diagnosticcode']
           codenumber = 0
 
           if cv = statusmesg.match(/AUP#([0-9A-Z]+)/)

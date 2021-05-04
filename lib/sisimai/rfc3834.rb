@@ -1,7 +1,6 @@
 module Sisimai
   # Sisimai::RFC3834 - RFC3834 auto reply message detector
   module RFC3834
-    # Imported from p5-Sisimail/lib/Sisimai/RFC3834.pm
     class << self
       # http://tools.ietf.org/html/rfc3834
       MarkingsOf = { :boundary => %r/\A__SISIMAI_PSEUDO_BOUNDARY__\z/ }
@@ -43,7 +42,7 @@ module Sisimai
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         leave = 0
         match = 0
 
@@ -97,9 +96,8 @@ module Sisimai
         return nil unless recipients > 0
 
         if mhead['content-type']
-          # Get the boundary string and set regular expression for matching with
-          # the boundary string.
-          b0 = Sisimai::MIME.boundary(mhead['content-type'], 0) || ''
+          # Get the boundary string and set regular expression for matching with the boundary string.
+          b0 = Sisimai::RFC2045.boundary(mhead['content-type'], 0) || ''
           MarkingsOf[:boundary] = %r/\A\Q#{b0}\E\z/ unless b0.empty?
         end
 

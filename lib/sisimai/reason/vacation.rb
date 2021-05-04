@@ -1,9 +1,8 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::Vacation is for only returning text and description.
-    # This class is called only from Sisimai.reason method.
+    # Sisimai::Reason::Vacation is for only returning text and description. This class is called only
+    # from Sisimai.reason method.
     module Vacation
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/Vacation.pm
       class << self
         Index = [
           'i am away on vacation',

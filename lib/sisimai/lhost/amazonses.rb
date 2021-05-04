@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::AmazonSES parses a bounce email which created by
-  # Amazon Simple Email Service.
+  # Sisimai::Lhost::AmazonSES parses a bounce email which created by Amazon Simple Email Service.
   # Methods in the module are called from only Sisimai::Message.
   module AmazonSES
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/AmazonSES.pm
       require 'sisimai/lhost'
 
       # https://aws.amazon.com/ses/
@@ -20,7 +18,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         dscontents = [Sisimai::Lhost.DELIVERYSTATUS]
         recipients = 0  # (Integer) The number of 'Final-Recipient' header
 
@@ -102,7 +100,7 @@ module Sisimai::Lhost
             while e = r.shift do
               # 'bouncedRecipients' => [ { 'emailAddress' => 'bounce@si...' }, ... ]
               # 'complainedRecipients' => [ { 'emailAddress' => 'complaint@si...' }, ... ]
-              next unless Sisimai::RFC5322.is_emailaddress(e['emailAddress'])
+              next unless Sisimai::Address.is_emailaddress(e['emailAddress'])
 
               v = dscontents[-1]
               if v['recipient']
@@ -137,8 +135,8 @@ module Sisimai::Lhost
                 if bouncetype[o['bounceType']] &&
                    bouncetype[o['bounceType']][o['bounceSubType']]
                   # 'bounce' => {
-                  #       'bounceType' => 'Permanent',
-                  #       'bounceSubType' => 'General'
+                  #   'bounceType'    => 'Permanent',
+                  #   'bounceSubType' => 'General'
                   # },
                   v['reason'] = bouncetype[o['bounceType']][o['bounceSubType']]
                 end
@@ -159,15 +157,15 @@ module Sisimai::Lhost
 
             while e = r.shift do
               # 'delivery' => {
-              #       'timestamp' => '2016-11-23T12:01:03.512Z',
-              #       'processingTimeMillis' => 3982,
-              #       'reportingMTA' => 'a27-29.smtp-out.us-west-2.amazonses.com',
-              #       'recipients' => [
-              #           'success@simulator.amazonses.com'
-              #       ],
-              #       'smtpResponse' => '250 2.6.0 Message received'
-              #   },
-              next unless Sisimai::RFC5322.is_emailaddress(e)
+              #   'timestamp' => '2016-11-23T12:01:03.512Z',
+              #   'processingTimeMillis' => 3982,
+              #   'reportingMTA' => 'a27-29.smtp-out.us-west-2.amazonses.com',
+              #   'recipients' => [
+              #     'success@simulator.amazonses.com'
+              #   ],
+              #   'smtpResponse' => '250 2.6.0 Message received'
+              # },
+              next unless Sisimai::Address.is_emailaddress(e)
 
               v = dscontents[-1]
               if v['recipient']
@@ -188,8 +186,7 @@ module Sisimai::Lhost
               v['date'].sub!(/[.]\d+Z\z/, '')
             end
           else
-            # The value of "notificationType" is not any of "Bounce", "Complaint",
-            # or "Delivery".
+            # The value of "notificationType" is not any of "Bounce", "Complaint", or "Delivery".
             return nil
           end
           return nil unless recipients > 0
@@ -239,8 +236,8 @@ module Sisimai::Lhost
           v = nil
 
           while e = bodyslices.shift do
-            # Read error messages and delivery status lines from the head of the email
-            # to the previous line of the beginning of the original message.
+            # Read error messages and delivery status lines from the head of the email to the previous
+            # line of the beginning of the original message.
             readslices << e # Save the current line for the next loop
 
             if readcursor == 0

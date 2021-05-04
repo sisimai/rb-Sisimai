@@ -1,7 +1,6 @@
 module Sisimai
   # Sisimai::RFC3464 - bounce mail parser class for Fallback.
   module RFC3464
-    # Imported from p5-Sisimail/lib/Sisimai/RFC3464.pm
     class << self
       require 'sisimai/lhost'
 
@@ -97,7 +96,7 @@ module Sisimai
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         dscontents = [Sisimai::Lhost.DELIVERYSTATUS]
         bodyslices = mbody.scrub('?').split("\n")
         readslices = ['']
@@ -115,8 +114,8 @@ module Sisimai
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
           d = e.downcase
 
@@ -176,7 +175,7 @@ module Sisimai
                 # Final-Recipient: ...
                 x = v['recipient'] || ''
                 y = Sisimai::Address.s3s4(cv[2])
-                y = maybealias unless Sisimai::RFC5322.is_emailaddress(y)
+                y = maybealias unless Sisimai::Address.is_emailaddress(y)
 
                 if !x.empty? && x != y
                   # There are multiple recipient addresses in the message body.
@@ -383,7 +382,7 @@ module Sisimai
               # May be an email address
               x = b['recipient'] || ''
               y = Sisimai::Address.s3s4(cv[1])
-              next unless Sisimai::RFC5322.is_emailaddress(y)
+              next unless Sisimai::Address.is_emailaddress(y)
 
               if !x.empty? && x != y
                 # There are multiple recipient addresses in the message body.
@@ -419,7 +418,7 @@ module Sisimai
         return nil unless recipients > 0
 
         require 'sisimai/mda'
-        mdabounced = Sisimai::MDA.make(mhead, mbody)
+        mdabounced = Sisimai::MDA.inquire(mhead, mbody)
         dscontents.each do |e|
           # Set default values if each value is empty.
           connheader.each_key { |a| e[a] ||= connheader[a] || '' }
@@ -438,7 +437,7 @@ module Sisimai
           e['diagnosis'] = Sisimai::String.sweep(e['diagnosis']) || ''
 
           if mdabounced
-            # Make bounce data by the values returned from Sisimai::MDA.make()
+            # Make bounce data by the values returned from Sisimai::MDA.inquire()
             e['agent']     = mdabounced['mda'] || 'RFC3464'
             e['reason']    = mdabounced['reason'] || 'undefined'
             e['diagnosis'] = mdabounced['message'] unless mdabounced['message'].empty?

@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::IMailServer parses a bounce email which created by
-  # Ipswitch IMail Server.
+  # Sisimai::Lhost::IMailServer parses a bounce email which created by Ipswitch IMail Server.
   # Methods in the module are called from only Sisimai::Message.
   module IMailServer
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/IMailServer.pm
       require 'sisimai/lhost'
 
       ReBackbone = %r|^Original[ ]message[ ]follows[.]|.freeze
@@ -31,7 +29,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-Mailer: <SMTP32 v8.22>
         match  = 0
         match += 1 if mhead['subject'] =~ /\AUndeliverable Mail[ ]*\z/
@@ -45,8 +43,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
 
           # Unknown user: kijitora@example.com
           #

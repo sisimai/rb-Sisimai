@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::ReceivingSES parses a bounce email which created
-  # by Amazon Simple Email Service. Methods in the module are called from
-  # only Sisimai::Message.
+  # Sisimai::Lhost::ReceivingSES parses a bounce email which created by Amazon Simple Email Service.
+  # Methods in the module are called from only Sisimai::Message.
   module ReceivingSES
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/ReceivingSES.pm
       require 'sisimai/lhost'
 
       # https://aws.amazon.com/ses/
@@ -24,7 +22,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-SES-Outgoing: 2015.10.01-54.240.27.7
         # Feedback-ID: 1.us-west-2.HX6/J9OVlHTadQhEu1+wdF9DBj6n6Pa9sW5Y/0pSOi8=:AmazonSES
         return nil unless mhead['x-ses-outgoing']
@@ -42,8 +40,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

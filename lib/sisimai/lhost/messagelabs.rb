@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::MessageLabs parses a bounce email which created by
-  # Symantec.cloud: formerly MessageLabs. Methods in the module are called
-  # from only Sisimai::Message.
+  # Sisimai::Lhost::MessageLabs parses a bounce email which created by Symantec.cloud: formerly MessageLabs.
+  # Methods in the module are called from only Sisimai::Message.
   module MessageLabs
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/MessageLabs.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -20,7 +18,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-Msg-Ref: server-11.tower-143.messagelabs.com!1419367175!36473369!1
         # X-Originating-IP: [10.245.230.38]
         # X-StarScan-Received:
@@ -44,8 +42,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

@@ -2,7 +2,6 @@ module Sisimai
   class Mail
     # Sisimai::Mail::Memory is a class for reading an email string
     class Memory
-      # Imported from p5-Sisimail/lib/Sisimai/Mail/Memory.pm
       # :path    [String]  Fixed string "<MEMORY>"
       # :size    [Integer] data size of the email text
       # :payload [Array]   Entire bounce mail message

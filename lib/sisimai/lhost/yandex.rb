@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Yandex parses a bounce email which created by Yandex.Mail.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Yandex parses a bounce email which created by Yandex.Mail. Methods in the module
+  # are called from only Sisimai::Message.
   module Yandex
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Yandex.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -15,7 +14,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-Yandex-Front: mxback1h.mail.yandex.net
         # X-Yandex-TimeMark: 1417885948
         # X-Yandex-Uniq: 92309766-f1c8-4bd4-92bc-657c75766587
@@ -40,8 +39,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

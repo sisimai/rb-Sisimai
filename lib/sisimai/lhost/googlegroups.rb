@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::GoogleGroups parses a bounce email which created by Google
-  # Groups. Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::GoogleGroups parses a bounce email which created by Google Groups. Methods in the
+  # module are called from only Sisimai::Message.
   module GoogleGroups
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/GoogleGroups.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -15,7 +14,7 @@ module Sisimai::Lhost
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
       # @since v4.25.6
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['from'].end_with?('<mailer-daemon@googlemail.com>')
         return nil unless mhead['subject'].start_with?('Delivery Status Notification')
         return nil unless mhead['x-failed-recipients']
@@ -56,7 +55,7 @@ module Sisimai::Lhost
         mhead['x-failed-recipients'].split(',').each do |e|
           # X-Failed-Recipients: neko@example.jp, nyaan@example.org, ...
           next unless e.end_with?('@googlegroups.com')
-          next unless Sisimai::RFC5322.is_emailaddress(e)
+          next unless Sisimai::Address.is_emailaddress(e)
 
           if v['recipient']
             # There are multiple recipient addresses in the message body.

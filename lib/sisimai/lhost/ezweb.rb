@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::EZweb parses a bounce email which created by au EZweb.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::EZweb parses a bounce email which created by au EZweb. Methods in the module are
+  # called from only Sisimai::Message.
   module EZweb
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/EZweb.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -43,7 +42,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         match  = 0
         match += 1 if mhead['from'].include?('Postmaster@ezweb.ne.jp')
         match += 1 if mhead['from'].include?('Postmaster@au.com')
@@ -66,17 +65,16 @@ module Sisimai::Lhost
         v = nil
 
         if mhead['content-type']
-          # Get the boundary string and set regular expression for matching with
-          # the boundary string.
-          b0 = Sisimai::MIME.boundary(mhead['content-type'], 1)
+          # Get the boundary string and set regular expression for matching with the boundary string.
+          b0 = Sisimai::RFC2045.boundary(mhead['content-type'], 1)
           rxboundary = Regexp.new('\A' << Regexp.escape(b0) << '\z') unless b0.empty?
         end
         rxmessages = []
         ReFailures.each_value { |a| rxmessages << a }
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e =~ MarkingsOf[:message]
@@ -157,8 +155,7 @@ module Sisimai::Lhost
             e['reason'] = 'filtered'
           else
             if e['command'] == 'RCPT'
-              # set "userunknown" when the remote server rejected after RCPT
-              # command.
+              # set "userunknown" when the remote server rejected after RCPT command.
               e['reason'] = 'userunknown'
             else
               # SMTP command is not RCPT

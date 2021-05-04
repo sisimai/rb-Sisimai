@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::MailMarshalSMTP parses a bounce email which created
-  # by Trustwave Secure Email Gateway: formerly MailMarshal SMTP. Methods in
-  # the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::MailMarshalSMTP parses a bounce email which created by Trustwave Secure Email
+  # Gateway: formerly MailMarshal SMTP. Methods in the module are called from only Sisimai::Message.
   module MailMarshalSMTP
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/MailMarshalSMTP.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -20,7 +18,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['subject'].start_with?('Undeliverable Mail: "')
 
         dscontents = [Sisimai::Lhost.DELIVERYSTATUS]
@@ -32,7 +30,7 @@ module Sisimai::Lhost
         regularexp = nil
         v = nil
 
-        boundary00 = Sisimai::MIME.boundary(mhead['content-type'], 1) || ''
+        boundary00 = Sisimai::RFC2045.boundary(mhead['content-type'], 1) || ''
         regularexp = if boundary00.size > 0
                        # Convert to regular expression
                        Regexp.new('\A' << Regexp.escape(boundary00) << '\z')
@@ -95,8 +93,7 @@ module Sisimai::Lhost
               # Last-Attempt-Date:  <16:21:07 seg, 22 Dezembro 2014>
               if cv = e.match(/\AOriginal Sender:[ \t]+[<](.+)[>]\z/)
                 # Original Sender:    <originalsender@example.com>
-                # Use this line instead of "From" header of the original
-                # message.
+                # Use this line instead of "From" header of the original message.
                 emailsteak[1] << ('From: ' << cv[1] << "\n")
 
               elsif cv = e.match(/\ASender-MTA:[ \t]+[<](.+)[>]\z/)

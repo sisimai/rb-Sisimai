@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::X5 parses a bounce email which created by Unknown MTA #5.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::X5 parses a bounce email which created by Unknown MTA #5. Methods in the module
+  # are called from only Sisimai::Message.
   module X5
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/X5.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -15,7 +14,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         match  = 0
         match += 1 if mhead['to'].to_s.include?('NotificationRecipients')
         if mhead['from'].include?('TWFpbCBEZWxpdmVyeSBTdWJzeXN0ZW0')
@@ -23,15 +22,15 @@ module Sisimai::Lhost
           #       Mail Delivery Subsystem
           mhead['from'].split(' ').each do |f|
             # Check each element of From: header
-            next unless Sisimai::MIME.is_mimeencoded(f)
-            match += 1 if Sisimai::MIME.mimedecode([f]).include?('Mail Delivery Subsystem')
+            next unless Sisimai::RFC2045.is_encoded(f)
+            match += 1 if Sisimai::RFC2045.decodeH([f]).include?('Mail Delivery Subsystem')
             break
           end
         end
 
-        if Sisimai::MIME.is_mimeencoded(mhead['subject'])
+        if Sisimai::RFC2045.is_encoded(mhead['subject'])
           # Subject: =?iso-2022-jp?B?UmV0dXJuZWQgbWFpbDogVXNlciB1bmtub3du?=
-          plain = Sisimai::MIME.mimedecode([mhead['subject']])
+          plain = Sisimai::RFC2045.decodeH([mhead['subject']])
           match += 1 if plain.include?('Mail Delivery Subsystem')
         end
         return nil if match < 2
@@ -51,8 +50,8 @@ module Sisimai::Lhost
         bodyslices = emailsteak[0].split("\n")
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

@@ -1,16 +1,14 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::TooManyConn checks the bounce reason is "toomanyconn" or
-    # not. This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::TooManyConn checks the bounce reason is "toomanyconn" or not. This class is
+    # called only Sisimai::Reason class.
     #
-    # This is the error that SMTP connection was rejected temporarily due to too
-    # many concurrency connections to the remote server. This reason has added
-    # in Sisimai 4.1.26 and does not exist in any version of bounceHammer.
+    # This is the error that SMTP connection was rejected temporarily due to too many concurrency
+    # connections to the remote server. This reason has added in Sisimai 4.1.26.
     #
     #   <kijitora@example.ne.jp>: host mx02.example.ne.jp[192.0.1.20] said:
     #     452 4.3.2 Connection rate limit exceeded. (in reply to MAIL FROM command)
     module TooManyConn
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/TooManyConn.pm
       class << self
         Index = [
           'all available ips are at maximum connection limit',    # SendGrid
@@ -48,9 +46,9 @@ module Sisimai
         #                                   false: is not filtered
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return true if argvs.reason == 'toomanyconn'
-          return true if Sisimai::SMTP::Status.name(argvs.deliverystatus).to_s == 'toomanyconn'
-          return true if match(argvs.diagnosticcode.downcase)
+          return true if argvs['reason'] == 'toomanyconn'
+          return true if Sisimai::SMTP::Status.name(argvs['deliverystatus']).to_s == 'toomanyconn'
+          return true if match(argvs['diagnosticcode'].downcase)
           return false
         end
 

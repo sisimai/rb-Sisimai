@@ -1,15 +1,16 @@
-# Sisimai is the system formerly known as bounceHammer 4, is a Ruby module for
-# analyzing bounce mails and generate structured data in a JSON format (YAML is
-# also available if "YAML" module is installed on your system) from parsed bounce
-# messages. Sisimai is a coined word: Sisi (the number 4 is pronounced "Si" in
-# Japanese) and MAI (acronym of "Mail Analyzing Interface").
+# Sisimai is a Ruby module for analyzing RFC5322 bounce emails and generating structured data from
+# parsed results.
 require 'sisimai/version'
 module Sisimai
-  # Imported from p5-Sisimail/lib/Sisimai.pm
   class << self
     def version(); return Sisimai::VERSION; end
-    def sysname(); return 'bouncehammer';   end
     def libname(); return 'Sisimai';        end
+
+    # Emulate "rise" method for the backward compatible
+    def make(argv0, **argv1)
+      warn ' ***warning: Sisimai.make will be removed at v5.1.0. Use Sisimai.rise instead';
+      return Sisimai.rise(argv0, **argv1)
+    end
 
     # Wrapper method for parsing mailbox/maidir
     # @param         [String] argv0      Path to mbox or Maildir/
@@ -17,30 +18,42 @@ module Sisimai
     # @param         [IO]     argv0      or STDIN object
     # @param         [Hash]   argv1      Parser options(delivered=false)
     # @options argv1 [Boolean] delivered true: Include "delivered" reason
-    # @options argv1 [Lambda]  hook      Lambda object to be called back
+    # @options argv1 [Boolean] vacation  true: Include "vacation" reason
+    # @options argv1 [Array]   c___      Proc object to a callback method for the message and each file
     # @return        [Array]             Parsed objects
     # @return        [nil]               nil if the argument was wrong or an empty array
-    def make(argv0, **argv1)
+    def rise(argv0, **argv1)
       return nil unless argv0
-      require 'sisimai/data'
-      require 'sisimai/message'
       require 'sisimai/mail'
+      require 'sisimai/fact'
 
-      list = []
       return nil unless mail = Sisimai::Mail.new(argv0)
+      kind = mail.kind
+      c___ = argv1[:c___].is_a?(Array) ? argv1[:c___] : [nil, nil]
+      sisi = []
+
       while r = mail.data.read do
         # Read and parse each email file
-        methodargv = { data: r, hook: argv1[:hook] }
-        mesg = Sisimai::Message.new(**methodargv)
-        next if mesg.void
+        path = mail.data.path
+        args = { data: r, hook: c___[0], origin: path, delivered: argv1[:delivered], vacation: argv1[:vacation] }
+        fact = Sisimai::Fact.rise(**args) || []
 
-        methodargv = { data: mesg, delivered: argv1[:delivered], origin: mail.data.path }
-        next unless data = Sisimai::Data.make(**methodargv)
-        list += data unless data.empty?
+        if c___[1]
+          # Run the callback function specified with "c___" parameter of Sisimai.rise after reading
+          # each email file in Maildir/ every time
+          args = { 'kind' => kind, 'mail' => r, 'path' => path, 'fact' => fact }
+          begin
+            c___[1].call(args) if c___[1].is_a?(Proc)
+          rescue StandardError => ce
+            warn ' ***warning: Something is wrong in the second element of the ":c___":' << ce.to_s
+          end
+        end
+
+        sisi += fact unless fact.empty?
       end
 
-      return nil if list.empty?
-      return list 
+      return nil if sisi.empty?
+      return sisi
     end
 
     # Wrapper method to parse mailbox/Maildir and dump as JSON
@@ -49,12 +62,13 @@ module Sisimai
     # @param         [IO]     argv0      or STDIN object
     # @param         [Hash] argv1        Parser options
     # @options argv1 [Integer] delivered true: Include "delivered" reason
+    # @options argv1 [Integer] vacation  true: Include "vacation" reason
     # @options argv1 [Lambda]  hook      Lambda object to be called back
     # @return        [String]            Parsed data as JSON text
     def dump(argv0, **argv1)
       return nil unless argv0
+      nyaan = Sisimai.rise(argv0, **argv1) || []
 
-      nyaan = Sisimai.make(argv0, **argv1) || []
       if RUBY_PLATFORM.start_with?('java')
         # java-based ruby environment like JRuby.
         require 'jrjackson'

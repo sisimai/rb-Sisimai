@@ -1,19 +1,16 @@
 module Sisimai
   module SMTP
-    # Sisimai::SMTP::Error is utilities for checking SMTP Errors from error
-    # message text.
+    # Sisimai::SMTP::Error is utilities for checking SMTP Errors from error message text.
     module Error
-      # Imported from p5-Sisimail/lib/Sisimai/SMTP/Error.pm
       class << self
         require 'sisimai/smtp/reply'
         require 'sisimai/smtp/status'
 
         SoftOrHard = {
           'soft' => %w[
-            blocked contenterror exceedlimit expired filtered mailboxfull
-            mailererror mesgtoobig networkerror norelaying policyviolation
-            rejected securityerror spamdetected suspend syntaxerror systemerror
-            systemfull toomanyconn virusdetected],
+            blocked contenterror exceedlimit expired filtered mailboxfull mailererror mesgtoobig
+            networkerror norelaying policyviolation rejected securityerror spamdetected suspend
+            syntaxerror systemerror systemfull toomanyconn virusdetected],
           'hard' => %w[hasmoved hostunknown userunknown]
         }.freeze
 

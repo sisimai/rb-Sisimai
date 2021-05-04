@@ -1,17 +1,13 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::NoRelaying checks the bounce reason is "norelaying" or not.
-    # This class is called only Sisimai::Reason class.
-    #
-    # This is the error that SMTP connection rejected with error message "Relaying
-    # Denied". This reason does not exist in any version of bounceHammer.
+    # Sisimai::Reason::NoRelaying checks the bounce reason is "norelaying" or not. This class is
+    # called only Sisimai::Reason class.
     #
     #    ... while talking to mailin-01.mx.example.com.:
     #    >>> RCPT To:<kijitora@example.org>
     #    <<< 554 5.7.1 <kijitora@example.org>: Relay access denied
     #    554 5.0.0 Service unavailable
     module NoRelaying
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/NoRelaying.pm
       class << self
         Index = [
           'as a relay',
@@ -52,13 +48,13 @@ module Sisimai
         #                                   false: is not
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          r = argvs.reason || ''
+          r = argvs['reason'] || ''
           if r.size > 0
             # Do not overwrite the reason
             return false if r.start_with?('securityerror', 'systemerror', 'undefined')
           else
             # Check the value of Diagnosic-Code: header with patterns
-            return true if match(argvs.diagnosticcode.downcase)
+            return true if match(argvs['diagnosticcode'].downcase)
           end
           return false
         end

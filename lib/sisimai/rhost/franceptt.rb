@@ -1,12 +1,10 @@
 module Sisimai
   module Rhost
-    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data
-    # object as an argument of get() method when the value of "rhost" of the object
-    # is "*.laposte.net" or "*.orange.fr".
+    # Sisimai::Rhost detects the bounce reason from the content of Sisimai::Data object as an argument
+    # of get() method when the value of "rhost" of the object is "*.laposte.net" or "*.orange.fr".
     # This class is called only Sisimai::Data class.
     module FrancePTT
       class << self
-        # Imported from p5-Sisimail/lib/Sisimai/Rhost/FrancePTT.pm
         ErrorCodes = {
           # 550 5.7.1 Service unavailable; client [X.X.X.X] blocked using Spamhaus
           # Les emails envoyes vers la messagerie Laposte.net ont ete bloques par nos services.
@@ -132,9 +130,9 @@ module Sisimai
         # @param    [Sisimai::Data] argvs   Parsed email object
         # @return   [String]                The bounce reason for Orange or La Poste
         def get(argvs)
-          return argvs.reason unless argvs.reason.empty?
+          return argvs['reason'] unless argvs['reason'].empty?
 
-          statusmesg = argvs.diagnosticcode
+          statusmesg = argvs['diagnosticcode']
           reasontext = ''
 
           if cv = statusmesg.match(/\b(LPN|LPNAAA|OFR|OUK)(_[0-9]{3}|[0-9]{3}[-_][0-9]{3})\b/i)

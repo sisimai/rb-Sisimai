@@ -1,9 +1,7 @@
 module Sisimai
   class Mail
-    # Sisimai::Mail::STDIN is a reader for getting contents of each email from
-    # STDIN
+    # Sisimai::Mail::STDIN is a reader for getting contents of each email from STDIN
     class STDIN
-      # Imported from p5-Sisimail/lib/Sisimai/Mail/STDIN.pm
       # :path   [String]  Fixed string "<STDIN>"
       # :size   [Integer] Data size which has been read
       # :offset [Integer]  The number of emails which have neen read

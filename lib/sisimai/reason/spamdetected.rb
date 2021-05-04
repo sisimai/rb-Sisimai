@@ -1,20 +1,14 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::SpamDetected checks the bounce reason is "spamdetected"
-    # due to Spam content in the message or not. This class is called only
-    # Sisimai::Reason class.
-    #
-    # This is the error that the message you sent was rejected by "spam filter"
-    # which is running on the remote host.
-    # This reason has added in Sisimai 4.1.25 and does not exist in any version
-    # of bounceHammer.
+    # Sisimai::Reason::SpamDetected checks the bounce reason is "spamdetected" due to Spam content
+    # in the message or not. This class is called only Sisimai::Reason class. This is the error that
+    # the message you sent was rejected by "spam filter" which is running on the remote host.
     #
     #    Action: failed
     #    Status: 5.7.1
     #    Diagnostic-Code: smtp; 550 5.7.1 Message content rejected, UBE, id=00000-00-000
     #    Last-Attempt-Date: Thu, 9 Apr 2008 23:34:45 +0900 (JST)
     module SpamDetected
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/SpamDetected.pm
       class << self
         Regex = %r{(?>
            ["]the[ ]mail[ ]server[ ]detected[ ]your[ ]message[ ]as[ ]spam[ ]and[ ]
@@ -162,10 +156,10 @@ module Sisimai
         #                                   false: is not rejected due to spam
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return nil  if argvs.deliverystatus.empty?
-          return true if argvs.reason == 'spamdetected'
-          return true if Sisimai::SMTP::Status.name(argvs.deliverystatus).to_s == 'spamdetected'
-          return true if match(argvs.diagnosticcode.downcase)
+          return nil  if argvs['deliverystatus'].empty?
+          return true if argvs['reason'] == 'spamdetected'
+          return true if Sisimai::SMTP::Status.name(argvs['deliverystatus']).to_s == 'spamdetected'
+          return true if match(argvs['diagnosticcode'].downcase)
           return false
         end
 

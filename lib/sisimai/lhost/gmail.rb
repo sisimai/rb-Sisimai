@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Gmail parses a bounce email which created by Gmail.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Gmail parses a bounce email which created by Gmail. Methods in the module are
+  # called from only Sisimai::Message.
   module Gmail
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Gmail.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -103,7 +102,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # From: Mail Delivery Subsystem <mailer-daemon@googlemail.com>
         # Received: from vw-in-f109.1e100.net [74.125.113.109] by ...
         #
@@ -162,8 +161,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or delivery status part
             readcursor |= Indicators[:deliverystatus] if e.start_with?(StartingOf[:message][0])
@@ -197,7 +196,7 @@ module Sisimai::Lhost
             end
 
             r = Sisimai::Address.s3s4(cv[1])
-            next unless Sisimai::RFC5322.is_emailaddress(r)
+            next unless Sisimai::Address.is_emailaddress(r)
             v['recipient'] = r
             recipients += 1
           else
@@ -213,8 +212,8 @@ module Sisimai::Lhost
           unless e['rhost']
             # Get the value of remote host
             if cv = e['diagnosis'].match(/[ \t]+by[ \t]+([^ ]+)[.][ \t]+\[(\d+[.]\d+[.]\d+[.]\d+)\][.]/)
-              # Google tried to deliver your message, but it was rejected by
-              # the server for the recipient domain example.jp by mx.example.jp. [192.0.2.153].
+              # Google tried to deliver your message, but it was rejected by the server for the recipient
+              # domain example.jp by mx.example.jp. [192.0.2.153].
               hostname = cv[1]
               ipv4addr = cv[2]
               e['rhost'] = if hostname =~ /[-0-9a-zA-Z]+[.][a-zA-Z]+\z/

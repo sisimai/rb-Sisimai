@@ -1,0 +1,48 @@
+module LhostEngineTest::Private
+  module IMailServer
+    IsExpected = {
+      # INDEX => [['D.S.N.', 'replycode', 'REASON', 'hardbounce'], [...]]
+      '01001' => [['5.0.912', '',    'hostunknown',     true]],
+      '01002' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01003' => [['5.0.911', '',    'userunknown',     true]],
+      '01004' => [['5.0.911', '',    'userunknown',     true]],
+      '01005' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01006' => [['5.0.911', '',    'userunknown',     true]],
+      '01007' => [['5.0.911', '',    'userunknown',     true]],
+      '01008' => [['5.0.912', '',    'hostunknown',     true]],
+      '01009' => [['5.0.947', '',    'expired',         false]],
+      '01010' => [['5.0.947', '',    'expired',         false],
+                  ['5.0.947', '',    'expired',         false]],
+      '01011' => [['5.0.911', '',    'userunknown',     true]],
+      '01012' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01013' => [['5.0.911', '',    'userunknown',     true]],
+      '01014' => [['5.0.912', '',    'hostunknown',     true]],
+      '01015' => [['5.0.911', '',    'userunknown',     true]],
+      '01016' => [['5.0.947', '',    'expired',         false]],
+      '01017' => [['5.0.947', '',    'expired',         false]],
+      '01018' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01019' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01020' => [['5.0.900', '',    'undefined',       false]],
+      '01021' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01022' => [['5.0.911', '',    'userunknown',     true],
+                  ['5.0.911', '',    'userunknown',     true]],
+      '01023' => [['5.0.922', '',    'mailboxfull',     false]],
+      '01024' => [['5.0.900', '',    'undefined',       false]],
+      '01025' => [['5.0.911', '',    'userunknown',     true]],
+      '01026' => [['5.0.911', '',    'userunknown',     true]],
+      '01027' => [['5.0.911', '',    'userunknown',     true]],
+      '01028' => [['5.0.911', '',    'userunknown',     true]],
+      '01029' => [['5.0.911', '',    'userunknown',     true]],
+      '01030' => [['5.0.912', '',    'hostunknown',     true]],
+      '01031' => [['5.0.912', '',    'hostunknown',     true]],
+      '01032' => [['5.0.900', '',    'undefined',       false]],
+      '01033' => [['5.0.911', '',    'userunknown',     true]],
+      '01034' => [['5.0.911', '',    'userunknown',     true]],
+      '01035' => [['5.0.980', '550', 'spamdetected',    false]],
+      '01036' => [['5.0.980', '550', 'spamdetected',    false]],
+      '01037' => [['5.0.980', '550', 'spamdetected',    false]],
+      '01038' => [['5.0.922', '',    'mailboxfull',     false]],
+    }
+  end
+end
+

@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Barracuda parses a bounce email which created by Barracuda.
-  # Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Barracuda parses a bounce email which created by Barracuda. Methods in the module
+  # are called from only Sisimai::Message.
   module Barracuda
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Barracuda.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -16,7 +15,7 @@ module Sisimai::Lhost
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
       # @since v4.25.6
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # Subject: **Message you sent blocked by our bulk email filter**
         return nil unless mhead['subject'].to_s.end_with?('our bulk email filter**')
 
@@ -32,8 +31,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           if readcursor == 0
             # Beginning of the bounce message or message/delivery-status part
             readcursor |= Indicators[:deliverystatus] if e.start_with?(StartingOf[:message][0])

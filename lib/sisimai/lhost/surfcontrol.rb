@@ -1,10 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::SurfControl parses a bounce email which created by
-  # WebSense SurfControl.
+  # Sisimai::Lhost::SurfControl parses a bounce email which created by WebSense SurfControl.
   # Methods in the module are called from only Sisimai::Message.
   module SurfControl
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/SurfControl.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -16,7 +14,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         # X-SEF-ZeroHour-RefID: fgs=000000000
         # X-SEF-Processed: 0_0_0_000__2010_04_29_23_34_45
         # X-Mailer: SurfControl E-mail Filter
@@ -35,8 +33,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           readslices << e # Save the current line for the next loop
 
           if readcursor == 0

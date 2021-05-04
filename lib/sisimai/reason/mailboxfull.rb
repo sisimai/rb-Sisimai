@@ -1,13 +1,11 @@
 module Sisimai
   module Reason
-    # Sisimai::Reason::MailboxFull checks the bounce reason is "mailboxfull" or
-    # not. This class is called only Sisimai::Reason class.
+    # Sisimai::Reason::MailboxFull checks the bounce reason is "mailboxfull" or not. This class is
+    # called only Sisimai::Reason class.
     #
-    # This is the error that a recipient's mailbox is full. Sisimai will set
-    # "mailboxfull" to the reason of email bounce if the value of Status: field
-    # in a bounce email is "4.2.2" or "5.2.2".
+    # This is the error that a recipient's mailbox is full. Sisimai will set "mailboxfull" to the
+    # reason of email bounce if the value of Status: field in a bounce email is "4.2.2" or "5.2.2".
     module MailboxFull
-      # Imported from p5-Sisimail/lib/Sisimai/Reason/MailboxFull.pm
       class << self
         Index = [
           'account disabled temporarly for exceeding receiving limits',
@@ -75,16 +73,16 @@ module Sisimai
         #                                   false: is not mailbox full
         # @see http://www.ietf.org/rfc/rfc2822.txt
         def true(argvs)
-          return nil  if argvs.deliverystatus.empty?
-          return true if argvs.reason == 'mailboxfull'
+          return nil  if argvs['deliverystatus'].empty?
+          return true if argvs['reason'] == 'mailboxfull'
 
           # Delivery status code points "mailboxfull".
           # Status: 4.2.2
           # Diagnostic-Code: SMTP; 450 4.2.2 <***@example.jp>... Mailbox Full
-          return true if Sisimai::SMTP::Status.name(argvs.deliverystatus).to_s == 'mailboxfull'
+          return true if Sisimai::SMTP::Status.name(argvs['deliverystatus']).to_s == 'mailboxfull'
 
           # Check the value of Diagnosic-Code: header with patterns
-          return true if match(argvs.diagnosticcode.downcase)
+          return true if match(argvs['diagnosticcode'].downcase)
           return false
         end
 

@@ -1,9 +1,8 @@
 module Sisimai::Lhost
-  # Sisimai::Lhost::Domino parses a bounce email which created by IBM
-  # Domino Server. Methods in the module are called from only Sisimai::Message.
+  # Sisimai::Lhost::Domino parses a bounce email which created by IBM Domino Server. Methods in the
+  # module are called from only Sisimai::Message.
   module Domino
     class << self
-      # Imported from p5-Sisimail/lib/Sisimai/Lhost/Domino.pm
       require 'sisimai/lhost'
 
       Indicators = Sisimai::Lhost.INDICATORS
@@ -13,7 +12,8 @@ module Sisimai::Lhost
         'userunknown' => [
           'not listed in Domino Directory',
           'not listed in public Name & Address Book',
-          "dans l'annuaire Domino", # TODO: "non répertorié dans l'annuaire Domino",
+          "non répertorié dans l'annuaire Domino",
+          'no se encuentra en el Directorio de Domino',
           'Domino ディレクトリには見つかりません',
         ],
         'filtered' => ['Cannot route mail to user'],
@@ -25,7 +25,7 @@ module Sisimai::Lhost
       # @param  [String] mbody  Message body of a bounce email
       # @return [Hash]          Bounce data list and message/rfc822 part
       # @return [Nil]           it failed to parse or the arguments are missing
-      def make(mhead, mbody)
+      def inquire(mhead, mbody)
         return nil unless mhead['subject'].start_with?('DELIVERY FAILURE:', 'DELIVERY_FAILURE:')
 
         require 'sisimai/rfc1894'
@@ -41,8 +41,8 @@ module Sisimai::Lhost
         v = nil
 
         while e = bodyslices.shift do
-          # Read error messages and delivery status lines from the head of the email
-          # to the previous line of the beginning of the original message.
+          # Read error messages and delivery status lines from the head of the email to the previous
+          # line of the beginning of the original message.
           next if e.empty?
 
           if readcursor == 0
@@ -110,6 +110,11 @@ module Sisimai::Lhost
                 next unless f == 1
                 permessage[fieldtable[o[0]]] = o[2]
               end
+            else
+              if v['diagnosis'] && e.start_with?("\s", "\t")
+                # The line is a continued line of "Diagnostic-Code:" field
+                v['diagnosis'] += e.sub(/\A[\s\t]+/, '')
+              end
             end
           end
         end
@@ -130,8 +135,7 @@ module Sisimai::Lhost
           end
         end
 
-        # Set the value of subjecttxt as a Subject if there is no original
-        # message in the bounce mail.
+        # Set the value of subjecttxt as a Subject if there is no original message in the bounce mail.
         emailsteak[1] << ('Subject: ' << subjecttxt << "\n") unless emailsteak[1] =~ /^Subject: /
 
         return { 'ds' => dscontents, 'rfc822' => emailsteak[1] }
